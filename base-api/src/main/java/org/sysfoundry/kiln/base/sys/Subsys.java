@@ -1,0 +1,75 @@
+package org.sysfoundry.kiln.base.sys;
+
+import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
+import com.google.inject.multibindings.Multibinder;
+import lombok.extern.slf4j.Slf4j;
+import org.sysfoundry.kiln.base.cfg.ConfigurationSource;
+import org.sysfoundry.kiln.base.cfg.InputStreamConfigurationSource;
+import org.sysfoundry.kiln.base.srv.ServerSet;
+import org.sysfoundry.kiln.base.srv.Server;
+
+import javax.inject.Singleton;
+import java.io.IOException;
+import java.io.InputStream;
+
+@Slf4j
+public abstract class Subsys extends AbstractModule {
+
+    public static final String DEFAULT_CONFIG_NAME = "config.json";
+
+    private SubsysInfo subsysInfo;
+
+    public Subsys(SubsysInfo subsysInfo){
+        this.subsysInfo = subsysInfo;
+    }
+
+    @Override
+    protected void configure() {
+        registerSubsysInfo();
+        registerSubsysConfigSource();
+    }
+
+    protected void registerSubsysConfigSource() {
+        try(InputStream resourceAsStream = getClass().getResourceAsStream(DEFAULT_CONFIG_NAME)){
+            if(resourceAsStream != null){
+                InputStreamConfigurationSource inputStreamConfigurationSource =
+                        new InputStreamConfigurationSource(false,true,resourceAsStream);
+                registerConfigSource(inputStreamConfigurationSource);
+            }else{
+                log.trace("Unable to find Subsys config {} for {} in classpath!",DEFAULT_CONFIG_NAME,subsysInfo.getID());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.debug("Failed to read {}, so ignoring config file..",DEFAULT_CONFIG_NAME);
+        }
+
+    }
+
+    protected void registerConfigSource(ConfigurationSource configurationSource) {
+        Multibinder<ConfigurationSource> configSources = Multibinder.newSetBinder(binder(),ConfigurationSource.class,
+                SubsysConfigSourceSet.class);
+        configSources.addBinding().toInstance(configurationSource);
+        log.trace("Registered Subsys config for {}",subsysInfo.getID());
+
+    }
+
+    protected void registerSubsysInfo(){
+
+        //bind the SubSystem` information
+        Multibinder<SubsysInfo> subsysInfoMultibinder = Multibinder.newSetBinder(binder(), SubsysInfo.class, SubsysSet.class);
+        subsysInfoMultibinder.addBinding().toInstance(subsysInfo);
+        log.trace("Registering SubsysInfo - {}",subsysInfo);
+    }
+
+    protected void bindServers(Class<? extends Server>... servers){
+        if(servers != null && servers.length>0) {
+            Multibinder<Server> serverMultibinder = Multibinder.newSetBinder(binder(), Server.class, ServerSet.class);
+            for (Class<? extends Server> server : servers) {
+                serverMultibinder.addBinding().to(server).in(Singleton.class);
+                log.trace("Bound Class {} to annotation {} set",server, ServerSet.class);
+            }
+
+        }
+    }
+}

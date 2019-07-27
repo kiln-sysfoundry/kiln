@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="base-api" />
+        <module name="kiln-examples" />
+        <module name="base-impl" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="base-meta-api" target="8" />
+      <module name="kiln-lifecycle-guice-impl" target="8" />
+      <module name="kiln-lifecyle-api" target="8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
