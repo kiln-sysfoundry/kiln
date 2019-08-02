@@ -19,6 +19,7 @@
 
 
         <menu name="Documentation">
+            <item name="Home" href="../index.html"/>
             <item name="Introduction" href="index.html"/>
             <item name="Getting Started" href="getting_started.html"/>
             <item name="about" href="about.html"/>
