@@ -3,7 +3,7 @@ package org.sysfoundry.kiln.base.sys;
 import org.sysfoundry.kiln.base.LifecycleException;
 
 /**
- * Abstraction of a System in Molecule.
+ * Abstraction of a System in Kiln.
  *
  */
 public interface Sys {
@@ -19,9 +19,7 @@ public interface Sys {
 
     /**
      * Method invoked by  the caller to start the 'system'
-     * Note that the start method could be synchronous (wait for the system and all services to be started before returning) or
-     * could be asynchronous (initiate the start and return immediately).
-     *
+     * Note that the implementation should ensure that the start() does not return till the system start is completed.
      * @throws LifecycleException Exception thrown when errors occur during system startup
      */
     void start() throws LifecycleException;
@@ -34,7 +32,7 @@ public interface Sys {
 
     /**
      * Issues a stop signal when the Sys needs to be stopped
-     * Note that similar to the start() method, the behaviour (synchronous or asynchronous) depends on the
+     * Note that similar to the start() method, this method should not return till the system stop is completed.
      *
      */
     void stop();

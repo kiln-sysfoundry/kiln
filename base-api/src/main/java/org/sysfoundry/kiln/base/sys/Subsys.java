@@ -1,18 +1,25 @@
 package org.sysfoundry.kiln.base.sys;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
 import lombok.extern.slf4j.Slf4j;
 import org.sysfoundry.kiln.base.cfg.ConfigurationSource;
 import org.sysfoundry.kiln.base.cfg.InputStreamConfigurationSource;
-import org.sysfoundry.kiln.base.srv.ServerSet;
 import org.sysfoundry.kiln.base.srv.Server;
+import org.sysfoundry.kiln.base.srv.ServerSet;
 
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * The Subsys represents an Abstraction of the Subsys in Kiln.
+ * The Subsys provides the below capabilities for any Sub system extending from this Abstract Guice Module.
+ * <ul>
+ *     <li>Subsys Configuration support - Ability to load subsys configuration from the Subsys's package</li>
+ *     <li>SubsysInfo support - Ability to register SubsysInfo provided by the concreted child subsystem</li>
+ * </ul>
+ */
 @Slf4j
 public abstract class Subsys extends AbstractModule {
 
@@ -20,6 +27,10 @@ public abstract class Subsys extends AbstractModule {
 
     private SubsysInfo subsysInfo;
 
+    /**
+     * Creates a Subsys instance using the {@link SubsysInfo}
+     * @param subsysInfo The subsys info for the subsys
+     */
     public Subsys(SubsysInfo subsysInfo){
         this.subsysInfo = subsysInfo;
     }
