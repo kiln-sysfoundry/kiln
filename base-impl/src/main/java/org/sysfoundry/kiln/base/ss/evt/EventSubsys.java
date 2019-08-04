@@ -2,6 +2,8 @@ package org.sysfoundry.kiln.base.ss.evt;
 
 
 import com.google.inject.Provides;
+import com.google.inject.matcher.Matchers;
+import com.google.inject.spi.TypeListener;
 import lombok.extern.slf4j.Slf4j;
 import org.sysfoundry.kiln.base.cfg.ConfigurationSource;
 import org.sysfoundry.kiln.base.sys.SubsysInfo;
@@ -23,13 +25,22 @@ public class EventSubsys extends Subsys {
     public static final String NAME = EventSubsys.class.getName();
 
     private EventbusConfig defaultEventbusConfig = new EventbusConfig();
+    private EventTargetListener eventTargetListener = new EventTargetListener();
 
     public EventSubsys(){
         super(new SubsysInfo(NAME,MAP(KV("name",NAME))));
         defaultEventbusConfig.setAsyncExecutorThreads(1);
     }
 
+    @Override
+    protected void configure() {
+        super.configure();
 
+        requestInjection(eventTargetListener.getEventTypeProvisionListener());
+
+        bindListener(Matchers.any(),eventTargetListener.getEventTypeListener());
+        bindListener(Matchers.any(),eventTargetListener.getEventTypeProvisionListener());
+    }
 
     @Provides
     @Singleton

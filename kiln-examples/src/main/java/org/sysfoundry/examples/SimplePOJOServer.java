@@ -1,7 +1,10 @@
 package org.sysfoundry.examples;
 
 import lombok.extern.slf4j.Slf4j;
+import org.sysfoundry.kiln.base.evt.Event;
+import org.sysfoundry.kiln.base.evt.OnEvent;
 import org.sysfoundry.kiln.base.srv.AbstractServer;
+import org.sysfoundry.kiln.base.sys.Sys;
 
 import javax.inject.Inject;
 
@@ -24,5 +27,11 @@ public class SimplePOJOServer extends AbstractServer {
 
     public void stop(){
         log.info("Stopping...");
+    }
+
+    @OnEvent({Sys.INITIALIZING_EVENT,Sys.STARTED_EVENT})
+    public void onNewEvent(Event event){
+        log.info("Received Event {}",event.getName());
+
     }
 }

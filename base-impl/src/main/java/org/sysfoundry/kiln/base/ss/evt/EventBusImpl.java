@@ -3,6 +3,8 @@ package org.sysfoundry.kiln.base.ss.evt;
 import org.sysfoundry.kiln.base.evt.EventBus;
 
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 class EventBusImpl implements EventBus{
 
@@ -12,6 +14,12 @@ class EventBusImpl implements EventBus{
 
 
     EventBusImpl(ExecutorService executorService){
+        eventBus = new com.google.common.eventbus.EventBus("sync-eventbus");
+        asyncEventBus = new com.google.common.eventbus.AsyncEventBus("async-eventbus",executorService);
+    }
+
+    EventBusImpl(){
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
         eventBus = new com.google.common.eventbus.EventBus("sync-eventbus");
         asyncEventBus = new com.google.common.eventbus.AsyncEventBus("async-eventbus",executorService);
     }

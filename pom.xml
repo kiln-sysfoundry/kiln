@@ -24,7 +24,7 @@
         <rincl>0.8.0</rincl>
         <clj-ds>0.0.4</clj-ds>
         <javax.inject>1</javax.inject>
-        <junit>4.12</junit>
+        <junit>5.5.1</junit>
     </properties>
 
     <name>Kiln framework</name>
@@ -122,10 +122,17 @@
                 <artifactId>rincl-resourcebundle</artifactId>
                 <version>${rincl}</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine -->
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
                 <version>${junit}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>${slf4j}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -147,7 +154,10 @@
             <groupId>com.github.krukow</groupId>
             <artifactId>clj-ds</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -177,8 +187,8 @@
                         <phase>site</phase>
                         <configuration>
                             <!-- Specific configuration for the aggregate report -->
-                            <excludePackageNames>corg.sysfoundry.examples.*</excludePackageNames>
-
+                            <excludePackageNames>org.sysfoundry.examples.*</excludePackageNames>
+                            <header><![CDATA[<a href="/index.html">Home<a>]]></header>
                         </configuration>
                     </execution>
                 </executions>
