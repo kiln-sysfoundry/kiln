@@ -9,6 +9,8 @@ import org.sysfoundry.kiln.base.ss.srv.ServerSubsys;
 import org.sysfoundry.kiln.base.sys.*;
 
 import javax.inject.Singleton;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -16,13 +18,19 @@ public class SysSubsys extends Subsys {
 
     //public static final String NAME = SysSubsys.class.getName();
 
-    private Optional<ConfigurationSource[]> externalConfigurationSourcesOptional = Optional.empty();
+    private Optional<List<ConfigurationSource>> externalConfigurationSourcesOptional = Optional.empty();
 
     public SysSubsys(SubsysInfo subsysInfo){
         super(subsysInfo);
     }
 
     public SysSubsys(SubsysInfo subsysInfo,ConfigurationSource... configurationSources){
+        super(subsysInfo);
+        List<ConfigurationSource> configurationSourceList = Arrays.asList(configurationSources);
+        externalConfigurationSourcesOptional = Optional.ofNullable(configurationSourceList);
+    }
+
+    public SysSubsys(SubsysInfo subsysInfo,List<ConfigurationSource> configurationSources){
         super(subsysInfo);
         externalConfigurationSourcesOptional = Optional.ofNullable(configurationSources);
     }
