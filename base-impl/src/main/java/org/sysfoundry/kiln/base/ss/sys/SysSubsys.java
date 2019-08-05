@@ -1,6 +1,7 @@
 package org.sysfoundry.kiln.base.ss.sys;
 
 import com.google.inject.Provides;
+import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
 import org.sysfoundry.kiln.base.cfg.CompositeConfigurationSource;
 import org.sysfoundry.kiln.base.cfg.ConfigurationSource;
@@ -20,6 +21,8 @@ public class SysSubsys extends Subsys {
     //public static final String NAME = SysSubsys.class.getName();
 
     private Optional<List<ConfigurationSource>> externalConfigurationSourcesOptional = Optional.empty();
+    private String[] args;
+    private Optional<List<Class>> singletonClassListOptional = Optional.empty();
 
     public SysSubsys(SubsysInfo subsysInfo){
         super(subsysInfo);
@@ -31,9 +34,13 @@ public class SysSubsys extends Subsys {
         externalConfigurationSourcesOptional = Optional.ofNullable(configurationSourceList);
     }
 
-    public SysSubsys(SubsysInfo subsysInfo,List<ConfigurationSource> configurationSources){
+    public SysSubsys(String[] args,SubsysInfo subsysInfo,
+                     List<ConfigurationSource> configurationSources,List<Class> singletonClassList){
         super(subsysInfo);
         externalConfigurationSourcesOptional = Optional.ofNullable(configurationSources);
+        this.args = args;
+        this.singletonClassListOptional = Optional.ofNullable(singletonClassList);
+
     }
 
     @Override
@@ -42,12 +49,30 @@ public class SysSubsys extends Subsys {
         //call super configure so that moduleinfo binding happens
         super.configure();
 
+        registerArgs();
+
         registerDefaultSys();
 
         registerSysConfigSourceSet();
 
+
+
         install(new EventSubsys());
         install(new ServerSubsys());
+
+        registerSingletonClasses();
+    }
+
+    private void registerSingletonClasses() {
+        singletonClassListOptional.ifPresent(singletonClassList->{
+            singletonClassList.forEach(clz->{
+                bind(clz).asEagerSingleton();
+            });
+        });
+    }
+
+    private void registerArgs() {
+        bind(new TypeLiteral<String[]>(){}).annotatedWith(Args.class).toInstance(args);
     }
 
     private void registerSysConfigSourceSet() {

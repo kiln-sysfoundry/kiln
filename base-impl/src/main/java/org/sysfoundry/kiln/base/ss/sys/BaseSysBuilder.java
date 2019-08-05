@@ -23,6 +23,9 @@ public class BaseSysBuilder {
     private Optional<List<ConfigurationSource>> configurationSourcesOptional = Optional.empty();
     private SubsysInfo defaultSubsysInfo = new SubsysInfo("anonymous-sys",MAP(KV("name","anonymous-sys")));
     private List<ConfigurationSource> defaultConfigurSourcesList;
+    private String[] sysArgsDefault = new String[]{}; // default args
+    private Optional<List<Class>> singletonClassListOptional = Optional.empty();
+    private List<Class> defaultSingletonClassList = new ArrayList<>();
 
 
     public BaseSysBuilder(){
@@ -75,8 +78,9 @@ public class BaseSysBuilder {
         List<Module> finalModuleList = new ArrayList<>();
 
         //add the SysSubsys automatically
-        SysSubsys sysSubsys = new SysSubsys(subsysInfoOptional.orElse(defaultSubsysInfo),
-                configurationSourcesOptional.orElse(defaultConfigurSourcesList));
+        SysSubsys sysSubsys = new SysSubsys(sysArgsOptional.orElse(sysArgsDefault),subsysInfoOptional.orElse(defaultSubsysInfo),
+                configurationSourcesOptional.orElse(defaultConfigurSourcesList),
+                singletonClassListOptional.orElse(defaultSingletonClassList));
 
         finalModuleList.add(sysSubsys);
 
@@ -88,5 +92,11 @@ public class BaseSysBuilder {
 
 
         return finalModuleList.toArray(new Module[0]);
+    }
+
+    public BaseSysBuilder withSingletons(Class... singletonClasses) {
+        List<Class> classList = Arrays.asList(singletonClasses);
+        singletonClassListOptional = Optional.ofNullable(classList);
+        return this;
     }
 }
