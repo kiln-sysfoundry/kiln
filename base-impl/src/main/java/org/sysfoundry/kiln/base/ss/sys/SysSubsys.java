@@ -4,6 +4,7 @@ import com.google.inject.Provides;
 import com.google.inject.multibindings.Multibinder;
 import org.sysfoundry.kiln.base.cfg.CompositeConfigurationSource;
 import org.sysfoundry.kiln.base.cfg.ConfigurationSource;
+import org.sysfoundry.kiln.base.cfg.PropertiesConfigurationSource;
 import org.sysfoundry.kiln.base.ss.evt.EventSubsys;
 import org.sysfoundry.kiln.base.ss.srv.ServerSubsys;
 import org.sysfoundry.kiln.base.sys.*;
@@ -77,7 +78,10 @@ public class SysSubsys extends Subsys {
     public ConfigurationSource provideSysConfigurationSource(
             @SubsysConfigSourceSet Set<ConfigurationSource> subsysConfigSourceSet,
             @SysConfigSourceSet Set<ConfigurationSource> sysConfigSourceSet){
-        return new CompositeConfigurationSource(subsysConfigSourceSet,sysConfigSourceSet);
+        PropertiesConfigurationSource systemPropertiesConfigSource = new PropertiesConfigurationSource(System.getProperties());
+
+        return new CompositeConfigurationSource(systemPropertiesConfigSource,
+                subsysConfigSourceSet,sysConfigSourceSet);
     }
 
 

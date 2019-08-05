@@ -118,6 +118,11 @@
                 <version>${jackson.json}</version>
             </dependency>
             <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-properties</artifactId>
+                <version>${jackson.json}</version>
+            </dependency>
+            <dependency>
                 <groupId>io.rincl</groupId>
                 <artifactId>rincl-resourcebundle</artifactId>
                 <version>${rincl}</version>
