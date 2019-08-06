@@ -17,6 +17,7 @@ class ServerLifecycleMethodInterceptor implements MethodInterceptor {
     private String beginName;
     private String endName;
     private String failName;
+    private ServerSubsysConfig serverSubsysConfig;
 
     ServerLifecycleMethodInterceptor(String beginName,String endName,String failName){
         this.beginName = beginName;
@@ -29,6 +30,11 @@ class ServerLifecycleMethodInterceptor implements MethodInterceptor {
         this.eventBus = eventBus;
     }
 
+    @Inject
+    public void setConfig(ServerSubsysConfig config){
+        this.serverSubsysConfig = config;
+    }
+
     @Override
     public Object invoke(MethodInvocation methodInvocation) throws Throwable {
         log.trace("Invoking {}",methodInvocation.getMethod());
@@ -39,7 +45,11 @@ class ServerLifecycleMethodInterceptor implements MethodInterceptor {
             server = (Server)targetInstance;
             name = server.getName();
             String eventName = String.format(eventNameFormat,name,beginName);
-            eventBus.publishASync(Event.create(eventName));
+            if(serverSubsysConfig != null && serverSubsysConfig.isDeliverServerLifecycleEventsAsAsync()) {
+                eventBus.publishASync(Event.create(eventName));
+            }else{
+                eventBus.publishSync(Event.create(eventName));
+            }
         }
         Object retVal = null;
         try {
@@ -47,14 +57,22 @@ class ServerLifecycleMethodInterceptor implements MethodInterceptor {
 
             if(server != null){
                 String eventName = String.format(eventNameFormat,name,endName);
-                eventBus.publishASync(Event.create(eventName));
+                if(serverSubsysConfig != null && serverSubsysConfig.isDeliverServerLifecycleEventsAsAsync()) {
+                    eventBus.publishASync(Event.create(eventName));
+                }else{
+                    eventBus.publishSync(Event.create(eventName));
+                }
             }
             return retVal;
 
         }catch(Exception e){
             if(server != null){
                 String eventName = String.format(eventNameFormat,name,failName);
-                eventBus.publishASync(Event.create(eventName));
+                if(serverSubsysConfig != null && serverSubsysConfig.isDeliverServerLifecycleEventsAsAsync()) {
+                    eventBus.publishASync(Event.create(eventName));
+                }else{
+                    eventBus.publishSync(Event.create(eventName));
+                }
             }
 
             //handle exception
