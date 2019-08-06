@@ -14,8 +14,8 @@ public class AnotherPOJOServer extends AbstractServer {
     }
 
 
-    public void start(){
-        log.info("Starting...");
+    public void start(String[] args){
+        log.info("Starting..."+args.length);
     }
 
 

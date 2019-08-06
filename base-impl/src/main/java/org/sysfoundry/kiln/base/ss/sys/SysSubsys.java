@@ -6,6 +6,7 @@ import com.google.inject.multibindings.Multibinder;
 import org.sysfoundry.kiln.base.cfg.CompositeConfigurationSource;
 import org.sysfoundry.kiln.base.cfg.ConfigurationSource;
 import org.sysfoundry.kiln.base.cfg.PropertiesConfigurationSource;
+import org.sysfoundry.kiln.base.srv.Server;
 import org.sysfoundry.kiln.base.ss.evt.EventSubsys;
 import org.sysfoundry.kiln.base.ss.srv.ServerSubsys;
 import org.sysfoundry.kiln.base.sys.*;
@@ -23,6 +24,7 @@ public class SysSubsys extends Subsys {
     private Optional<List<ConfigurationSource>> externalConfigurationSourcesOptional = Optional.empty();
     private String[] args;
     private Optional<List<Class>> singletonClassListOptional = Optional.empty();
+    private Optional<List<Class<? extends Server>>> serverClassListOptional = Optional.empty();
 
     public SysSubsys(SubsysInfo subsysInfo){
         super(subsysInfo);
@@ -34,12 +36,14 @@ public class SysSubsys extends Subsys {
         externalConfigurationSourcesOptional = Optional.ofNullable(configurationSourceList);
     }
 
-    public SysSubsys(String[] args,SubsysInfo subsysInfo,
-                     List<ConfigurationSource> configurationSources,List<Class> singletonClassList){
+    public SysSubsys(String[] args, SubsysInfo subsysInfo,
+                     List<ConfigurationSource> configurationSources, List<Class> singletonClassList,
+                     List<Class<? extends Server>> serverClassList){
         super(subsysInfo);
         externalConfigurationSourcesOptional = Optional.ofNullable(configurationSources);
         this.args = args;
         this.singletonClassListOptional = Optional.ofNullable(singletonClassList);
+        this.serverClassListOptional = Optional.ofNullable(serverClassList);
 
     }
 
@@ -55,12 +59,18 @@ public class SysSubsys extends Subsys {
 
         registerSysConfigSourceSet();
 
-
+        registerServerClasses();
 
         install(new EventSubsys());
         install(new ServerSubsys());
 
         registerSingletonClasses();
+    }
+
+    private void registerServerClasses() {
+        serverClassListOptional.ifPresent(serverClassList->{
+            bindServers(serverClassList.toArray(new Class[0]));
+        });
     }
 
     private void registerSingletonClasses() {

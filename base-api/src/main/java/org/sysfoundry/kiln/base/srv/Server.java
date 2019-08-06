@@ -26,7 +26,7 @@ public interface Server {
         return Optional.of(new String[]{});
     }
 
-    public void start() throws LifecycleException;
+    public void start(String[] args) throws LifecycleException;
 
     public void stop() throws LifecycleException;
 

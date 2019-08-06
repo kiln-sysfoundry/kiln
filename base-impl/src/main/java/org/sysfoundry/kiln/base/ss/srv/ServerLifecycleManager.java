@@ -7,6 +7,7 @@ import org.sysfoundry.kiln.base.srv.Server;
 import org.sysfoundry.kiln.base.srv.ServerSet;
 import org.sysfoundry.kiln.base.evt.Event;
 import org.sysfoundry.kiln.base.evt.EventBus;
+import org.sysfoundry.kiln.base.sys.Args;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -24,11 +25,13 @@ class ServerLifecycleManager {
     private Optional<List<Server>> unknownLevelListOptional;
     private Optional<List<Server>> orphanLevelListOptional;
     private Optional<List<List<Server>>> orderedServersListOption;
+    private String[] args;
 
     @Inject
-    ServerLifecycleManager(EventBus eventBus, @ServerSet Set<Server> servers){
+    ServerLifecycleManager(EventBus eventBus, @ServerSet Set<Server> servers, @Args String[] args){
         this.eventBus = eventBus;
         this.servers = servers;
+        this.args = args;
         this.eventBus.register(this);
     }
 
@@ -149,7 +152,7 @@ class ServerLifecycleManager {
             serverListOfList.forEach(serverList->{
                 serverList.forEach(server -> {
                     try {
-                        server.start();
+                        server.start(args);
                     } catch (LifecycleException e) {
                         e.printStackTrace();
                     }

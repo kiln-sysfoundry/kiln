@@ -20,8 +20,8 @@ public class SimplePOJOServer extends AbstractServer {
         this.config = config;
     }
 
-    public void start(){
-        log.info("Starting...");
+    public void start(String[] args){
+        log.info("Starting..."+args.length);
     }
 
 
