@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Vijayakumar Mohan
+ * Copyright 2019 Sysfoundry (www.sysfoundry.org)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package org.sysfoundry.kiln.base.cfg;
 
 /**
- * This interface provides an abstraction of a Configuration Source within molecule framework
+ * This interface provides an abstraction of a Configuration Source in Kiln
  */
 public interface ConfigurationSource {
 
