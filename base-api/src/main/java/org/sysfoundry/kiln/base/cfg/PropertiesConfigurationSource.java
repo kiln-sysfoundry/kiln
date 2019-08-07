@@ -17,7 +17,6 @@
 package org.sysfoundry.kiln.base.cfg;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsFactory;
@@ -29,6 +28,14 @@ import java.util.*;
 
 import static org.sysfoundry.kiln.base.util.JSONUtils.merge;
 
+/**
+ * A properties based configuration source.
+ * This ConfigurationSource allows multiple properties instances to be merged and composed in to a
+ * single logical one.
+ * The order of merge is the reverse order of the input.
+ * The first item in the list will be the last one merged and hence will have the opportunity to override / hide the other properties down in the list
+ *
+ */
 public class PropertiesConfigurationSource implements ConfigurationSource{
 
     private JavaPropsFactory factory = new JavaPropsFactory();
@@ -39,6 +46,10 @@ public class PropertiesConfigurationSource implements ConfigurationSource{
 
     private Optional<List<Properties>> optionalPropertiesList = Optional.empty();
 
+    /**
+     * Constructs a PropertiesConfigurationSource from the given list of properties objects
+     * @param propertiesList - The list of properties to be composed as a configuration source
+     */
     public PropertiesConfigurationSource(Properties... propertiesList){
         List<Properties> propertiesListObj = Arrays.asList(propertiesList);
         optionalPropertiesList = Optional.ofNullable(propertiesListObj);

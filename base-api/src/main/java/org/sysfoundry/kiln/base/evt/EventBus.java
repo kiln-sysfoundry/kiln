@@ -16,15 +16,37 @@
 
 package org.sysfoundry.kiln.base.evt;
 
+/**
+ * This class represents the EventBus abstraction in Kiln.
+ * The EventBus is a singleton instance in kiln which has the ability to publish events in synchronous and asynchronous manner.
+ * The EventBus also provides the ability for interested subscribers (other objects) in the system to subscribe for events
+ * Similarly the subscribers can also unsubscribe.
+ */
 public interface EventBus {
 
+    /**
+     * Publish the given message synchronously
+     * @param message - The message to publish
+     */
     void publishSync(Object message);
 
+    /**
+     * Publish the given message asynchronously
+     * @param message - The message to publish
+     */
     void publishASync(Object message);
 
 
+    /**
+     * Register for interested events
+     * @param subscriber - The subscriber who wants to be registered for events
+     */
     void register(Object subscriber);
 
+    /**
+     * Unregister an registered subscriber
+     * @param subscriber - The subscriber who wants to be unregistered from the event bus
+     */
     void unRegister(Object subscriber);
 
 

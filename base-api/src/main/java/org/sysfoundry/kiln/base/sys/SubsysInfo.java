@@ -19,20 +19,36 @@ package org.sysfoundry.kiln.base.sys;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * The SubsysInfo is used to capture the Subsys instance information and attributes
+ */
 public class SubsysInfo {
 
     private String id;
     private Map<String,Object> attributes;
 
+    /**
+     * Construct a SubsysInfo with the given id and attributes
+     * @param id - The id of the subsys
+     * @param attributes - The key value map of attributes of the subsys
+     */
     public SubsysInfo(String id, Map<String,Object> attributes){
         this.id = id;
         this.attributes = attributes;
     }
 
+    /**
+     * The ID of the subsys
+     * @return The ID of the subsys
+     */
     public String getID() {
         return id;
     }
 
+    /**
+     * Retrieve the Attributes of the Subsys
+     * @return The attribtues of the Subsys
+     */
     public Map<String, Object> getAttributes() {
         return this.attributes;
     }

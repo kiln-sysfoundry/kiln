@@ -24,6 +24,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * This annotation is used to bind a Server instance to the Server instance set.
+ * This annotation is used by kiln implementation to get a list of all the registered server instances from the different subsystems.
+ */
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD,ElementType.PARAMETER,ElementType.METHOD})

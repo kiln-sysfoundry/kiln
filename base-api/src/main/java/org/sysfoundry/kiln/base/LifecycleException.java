@@ -16,6 +16,9 @@
 
 package org.sysfoundry.kiln.base;
 
+/**
+ * An exception used to indicate lifecycle errors in kiln.
+ */
 public class LifecycleException extends Exception {
 
     public LifecycleException() {

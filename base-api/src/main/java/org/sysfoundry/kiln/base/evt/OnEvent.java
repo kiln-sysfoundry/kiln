@@ -18,9 +18,17 @@ package org.sysfoundry.kiln.base.evt;
 
 import java.lang.annotation.*;
 
+/**
+ * The OnEvent annotation is used by interested Singleton instances in Kiln to register for the specified list of events
+ *
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface OnEvent {
 
+    /**
+     * The list of event names interested. Default is an empty list
+     * @return The list of events as an array
+     */
     String[] value() default {};
 }

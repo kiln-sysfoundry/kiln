@@ -24,6 +24,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * This binding annotation is used to bind and look up the Subsys configuration source set.
+ * Every Subsys implementation is expected to bind its configuration to this set binder.
+ */
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD,ElementType.PARAMETER,ElementType.METHOD})

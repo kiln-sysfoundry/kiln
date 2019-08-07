@@ -18,6 +18,16 @@ package org.sysfoundry.kiln.base.srv;
 
 import java.util.Optional;
 
+/**
+ * The AbstractServer provides a convenient and easy to use abstract class for Server implementations to extend from
+ * It provides the below capabilities for subclasses to reuse
+ * <ol>
+ *     <li>name - Ability to specify a name for the server</li>
+ *     <li>providedCapabilities - Ability to specify a list of capabilities which are provided by the server</li>
+ *     <li>requiredCapabilities - Ability to specify a list of capabilities which are required by the server in order to start successfully</li>
+ *     <li>startLevel - Ability for kiln to set and retrieve the startlevel of the server</li>
+ * </ol>
+ */
 public abstract class AbstractServer implements Server{
 
     private String name;

@@ -123,15 +123,22 @@ public class SysSubsys extends Subsys {
         bind(Sys.class).to(DefaultSys.class).in(Singleton.class);
     }
 
+
+    @Provides
+    @Singleton
+    @RuntimeSysConfigSource
+    public ConfigurationSource provideRuntimeSysConfigurationSource(){
+        PropertiesConfigurationSource systemPropertiesConfigSource = new PropertiesConfigurationSource(System.getProperties());
+        return systemPropertiesConfigSource;
+    }
+
     @Provides
     @Singleton
     @SysConfigSource
-    public ConfigurationSource provideSysConfigurationSource(
+    public ConfigurationSource provideSysConfigurationSource(@RuntimeSysConfigSource ConfigurationSource runtimeSysConfigurationSource,
             @SubsysConfigSourceSet Set<ConfigurationSource> subsysConfigSourceSet,
             @SysConfigSourceSet Set<ConfigurationSource> sysConfigSourceSet){
-        PropertiesConfigurationSource systemPropertiesConfigSource = new PropertiesConfigurationSource(System.getProperties());
-
-        return new CompositeConfigurationSource(systemPropertiesConfigSource,
+        return new CompositeConfigurationSource(runtimeSysConfigurationSource,
                 subsysConfigSourceSet,sysConfigSourceSet);
     }
 

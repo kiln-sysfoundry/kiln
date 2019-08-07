@@ -24,6 +24,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * The SysConfiSource binding annotation is used to bind the complete composed configuration source in the system
+ * The Kiln implementation composes all the configuration sources and then binds one consolidated configuration source instance
+ * with this Binding annotation. This provides the ability for all the subsystems to look up this composed configuration and
+ * pick the necessary configuration path from the composed configuration.
+ */
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD,ElementType.PARAMETER,ElementType.METHOD})

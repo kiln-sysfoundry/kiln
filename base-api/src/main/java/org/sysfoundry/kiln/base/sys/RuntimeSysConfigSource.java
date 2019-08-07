@@ -25,11 +25,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This is a binding annotation used to bind the System configurations supplied by the developer when using the kiln framework.
- * Kiln implementation uses this annotation to get a lost of all the System configurations supplied from outside kiln.
+ * The RuntimeSysConfigSource binding annotation is used to bind the JVM System properties passed at runtime
+ * The Kiln implementation loads all the System properties as a nested tree datastructure so that the configuration sources
+ * can be uniformly merged into a single nested configuration source.
+ * This annotation is used by kiln internally to distinguish between the different type of configuration sources.
+ * The developer using Kiln need not be concerned about this configuration source unless he/she specifically wants to
+ * read data from the System properties, instead of from the composite one.
+ *
  */
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD,ElementType.PARAMETER,ElementType.METHOD})
-public @interface SysConfigSourceSet {
+public @interface RuntimeSysConfigSource {
 }

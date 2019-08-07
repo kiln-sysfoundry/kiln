@@ -57,6 +57,10 @@ public abstract class Subsys extends AbstractModule {
         registerSubsysConfigSource();
     }
 
+    /**
+     * Looks up and registers the configuration source from the default location.
+     * The default location is the package name of the subsystem instance appended with '/config.json'
+     */
     protected void registerSubsysConfigSource() {
         try(InputStream resourceAsStream = getClass().getResourceAsStream(DEFAULT_CONFIG_NAME)){
             if(resourceAsStream != null){
@@ -73,6 +77,10 @@ public abstract class Subsys extends AbstractModule {
 
     }
 
+    /**
+     * Registers the given configuration source instance to the SubsysConfigSourceSet annotation.
+     * @param configurationSource - The configuration source instance to register
+     */
     protected void registerConfigSource(ConfigurationSource configurationSource) {
         Multibinder<ConfigurationSource> configSources = Multibinder.newSetBinder(binder(),ConfigurationSource.class,
                 SubsysConfigSourceSet.class);
@@ -81,6 +89,9 @@ public abstract class Subsys extends AbstractModule {
 
     }
 
+    /**
+     * Registers or binds the SubsysInfo to the SubsysSet annotation @see #SubsysSet
+     */
     protected void registerSubsysInfo(){
 
         //bind the SubSystem` information
@@ -89,6 +100,10 @@ public abstract class Subsys extends AbstractModule {
         log.trace("Registering SubsysInfo - {}",subsysInfo);
     }
 
+    /**
+     * Binds the given set of server classes to the ServerSet annotation. @See #ServerSet
+     * @param servers - The list of server classes to bind
+     */
     protected void bindServers(Class<? extends Server>... servers){
         if(servers != null && servers.length>0) {
             Multibinder<Server> serverMultibinder = Multibinder.newSetBinder(binder(), Server.class, ServerSet.class);

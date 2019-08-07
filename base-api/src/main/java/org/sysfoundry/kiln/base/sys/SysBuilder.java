@@ -16,7 +16,16 @@
 
 package org.sysfoundry.kiln.base.sys;
 
+/**
+ * The SysBuilder is an abstraction of a System builder in kiln.
+ * SysBuilder instances can compose and build a system as specified by the developer of the system.
+ */
 public interface SysBuilder {
 
+    /**
+     * The build method is expected to consider all the specifications used during the Sys building process
+     * and then return a fully constructed Sys instance. The Sys instance allows the boot strap script to start he instance of Sys
+     * @return The Sys which is used to start the system
+     */
     Sys build();
 }

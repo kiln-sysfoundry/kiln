@@ -24,6 +24,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * This annotation is a binding annotation used to bind the program arguments within kiln.
+ * Any injected instance in Kiln can lookup the program arguments (i.e supplied on startup of the JVM)
+ */
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD,ElementType.PARAMETER,ElementType.METHOD})
