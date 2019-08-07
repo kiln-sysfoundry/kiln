@@ -32,7 +32,7 @@ The developer composes a System from a set of Subsystems (provided by Kiln or de
 The below diagram depicts the core concepts of System and Subsystems in the context of Kiln.
 
 <div style="display: flex; justify-content: center;">
-  <img src="images/Sys_Subsys.png" alt="System and Subsystems" width="500" height="300"/>
+  <img src="images/Sys_Subsys.svg" alt="System and Subsystems"/>
 </div>
 
 
@@ -49,14 +49,14 @@ All Subsystems are valid [Guice][guice] Modules. Which allows the developer to m
 A Subsys instance in Kiln can be visualized as below
 
 <div style="display: flex; justify-content: center;">
-<img src="images/Subsys_Abstraction_Encapsulation.png" alt="Subsys abstraction and encapsulation" width="1000" height="500"/>
+<img src="images/Subsys_Abstraction_Encapsulation.svg" alt="Subsys abstraction and encapsulation"/>
 </div>
 
 A Sys thus composed of multiple Subsys and their relationships are illustrated below. 
 To enable this composition and binding of service provision to service requirement, the Sys provides additional services as well. 
 
 <div style="display: flex; justify-content: center;">
-<img src="images/Sys_Subsys_Provides_Requires.png" alt="Sys , Subsys Requires Provides" width="1000" height="500"/>
+<img src="images/Sys_Subsys_Provides_Requires.svg" alt="Sys , Subsys Requires Provides"/>
 </div>
  
 ### Server and Lifecycle Events
@@ -116,7 +116,7 @@ For more details about the Provides and Requires capabilities refer to the Javad
 The diagram below illustrates the relationship that exists between Sys, Subsys and Server abstractions.
 
 <div style="display: flex; justify-content: center;">
-<img src="images/Sys_Subsys_Server_Relationship.png" alt="System, Subsystems and Servers Relationship" width="1000" height="400"/>
+<img src="images/Sys_Subsys_Server_Relationship.svg" alt="System, Subsystems and Servers Relationship"/>
 </div>
 
 ### Inter-subsystem Communication
@@ -127,7 +127,7 @@ The EventBus provides the ability for Subsystems and its internals to be able to
 This capability is depicted below.
 
 <div style="display: flex; justify-content: center;">
-<img src="images/EventBus_Subsys_Relationship.png" alt="EventBus and Subsys Relationship" width="1000" height="600"/>
+<img src="images/EventBus_Subsys_Relationship.svg" alt="EventBus and Subsys Relationship"/>
 </div>
 
 ### Subsystem Configuration
