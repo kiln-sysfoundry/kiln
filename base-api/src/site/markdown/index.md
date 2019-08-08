@@ -49,3 +49,28 @@ The eventing package (org.sysfoundry.kiln.base.evt) houses the key interfaces, c
 The key interfaces, classes and annotations in this package are,
 
 1.Event - The Event value object represents an immutable Event object in kiln. Any subsystem which wants to interact with other systems purely through the Message (event) processing model can use this abstraction to interact and communicate with other subsystems.
+2.EventBus - The EventBus interface provides the abstraction of an event bus which allows participating Subsystems and its internals to publish and subscribe to interested events. The EventBus supports the notion of synchronous and asynchronous events.
+3.OnEvent - The OnEvent annotation provides the ability for interested classes (singletons) in Kiln to express the callback on interested events
+
+<div style="display: flex; justify-content: center;">
+  <img src="images/Event_publish_subscribe_receive_events.svg" alt="Publish, Subscribe and Receiving Events"/>
+</div>
+
+Note: In the diagram above, the objects / subscribers of events need not explicitly register with the EventBus, this is accomplished by annotating an appropriate
+callback method with the OnEvent annotation.
+
+## Configuration
+The configuration package (org.sysfoundry.kiln.base.cfg) houses the key interfaces, classes and annotations which logically belong to the configuration concept in kiln.
+The key interfaces, classes and annotations in this package are,
+
+1. ConfigurationSource - This interface represents the Configuration Source abstraction in kiln. All configuration sources need to implement this interface.
+2. InputStreamConfigurationSource - This concrete class provides the ability to merge a list of inputstreams representing the configurations (in JSON) format into a single configuration source.
+3. CompositeConfigurationSource - This concrete class composes multiple configuration sources into a composite one. It provides the ability to designate a set of configuration as primary and secondary so as to control the order of configuration lookup.
+4. PropertiesConfigurationSource - This concrete class turns a java.util.Properties data-structure in to a configuration source.
+
+The PropertiesConfigurationSource is used by Kiln to turn the System properties into a nested hierarchical tree structure similar to JSON format.
+
+## Util
+The Util package (org.sysfoundry.kiln.base.util) provides a number of utility classes and functions which is used in kiln all across.
+
+
