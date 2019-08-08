@@ -21,7 +21,7 @@
     <groupId>org.sysfoundry</groupId>
     <artifactId>kiln</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
     <modules>
         <module>kiln-examples</module>
         <module>base-api</module>
