@@ -85,8 +85,8 @@
             </url>
         </repository>
         <site>
-            <id>sysfoundry.org</id>
-            <url>scp://org.sysfoundry/docs/project/</url>
+            <id>${project.artifactId}-site</id>
+            <url>./</url>
         </site>
     </distributionManagement>
 
