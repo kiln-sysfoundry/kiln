@@ -71,7 +71,6 @@
         <connection>scm:git:git://github.com/kiln-sysfoundry/kiln.git</connection>
         <developerConnection>scm:git:git@github.com:kiln-sysfoundry/kiln.git</developerConnection>
         <url>https://github.com/kiln-sysfoundry/kiln</url>
-        <tag>kiln-0.1.0</tag>
     </scm>
 
     <distributionManagement>
