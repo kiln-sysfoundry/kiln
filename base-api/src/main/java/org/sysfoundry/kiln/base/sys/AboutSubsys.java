@@ -51,6 +51,12 @@ public @interface AboutSubsys {
     String configPrefix() default Constants.EMPTY;
 
     /**
+     * Specify whether to enable configuration validation. Default is disabled.
+     * @return Retrieves whether the configuration validation is enabled or disabled.
+     */
+    boolean validateConfig() default false;
+
+    /**
      * The Server classes provided by the Subsystem
      * Default is assumed to be empty. Which means no Server is provided by this subsystem
      * @return The List of Server Classes provided by the Subsystem

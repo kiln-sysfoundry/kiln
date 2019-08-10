@@ -30,6 +30,9 @@ import org.sysfoundry.kiln.base.ss.srv.ServerSubsys;
 import org.sysfoundry.kiln.base.sys.*;
 
 import javax.inject.Singleton;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +45,9 @@ import java.util.Set;
                 @Key(type=Set.class,valueType=ConfigurationSource.class,annotation=SysConfigSourceSet.class,scope=Singleton.class),
                 @Key(type=Set.class,valueType=ConfigurationSource.class,annotation=SubsysConfigSourceSet.class,scope=Singleton.class),
                 @Key(type=Sys.class,scope=Singleton.class),
-                @Key(type=String[].class,annotation=Args.class,scope=Singleton.class)
+                @Key(type=String[].class,annotation=Args.class,scope=Singleton.class),
+                @Key(type= Validator.class,scope=Singleton.class),
+                @Key(type= ValidatorFactory.class,scope=Singleton.class)
         },
         requirements = {
                 @Key(type= EventBus.class)
@@ -107,6 +112,8 @@ public class SysSubsys extends Subsys {
         install(new ServerSubsys());
 
         registerSingletonClasses();
+
+
     }
 
     private void registerServerClasses() {
@@ -168,5 +175,15 @@ public class SysSubsys extends Subsys {
                 subsysConfigSourceSet,sysConfigSourceSet);
     }
 
-
+    @Provides
+    @Singleton
+    public Validator provideValidator(ValidatorFactory validatorFactory){
+        return validatorFactory.getValidator();
+    }
+    
+    @Provides
+    @Singleton
+    public ValidatorFactory provideValidatorFactory(){
+        return Validation.buildDefaultValidatorFactory();
+    }
 }

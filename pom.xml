@@ -39,6 +39,8 @@
         <clj-ds>0.0.4</clj-ds>
         <javax.inject>1</javax.inject>
         <junit>5.5.1</junit>
+        <bval>2.0.2</bval>
+        <validation.api>2.0.1.Final</validation.api>
     </properties>
 
     <name>Kiln framework</name>
@@ -155,6 +157,28 @@
                 <scope>test</scope>
             </dependency>
 
+            <!-- https://mvnrepository.com/artifact/org.apache.bval/bval-jsr -->
+            <dependency>
+                <groupId>org.apache.bval</groupId>
+                <artifactId>bval-jsr</artifactId>
+                <version>${bval}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.apache.bval/bval-extras -->
+            <dependency>
+                <groupId>org.apache.bval</groupId>
+                <artifactId>bval-extras</artifactId>
+                <version>${bval}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/javax.validation/validation-api -->
+            <dependency>
+                <groupId>javax.validation</groupId>
+                <artifactId>validation-api</artifactId>
+                <version>${validation.api}</version>
+            </dependency>
+
+
         </dependencies>
     </dependencyManagement>
 
@@ -177,6 +201,11 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
         </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

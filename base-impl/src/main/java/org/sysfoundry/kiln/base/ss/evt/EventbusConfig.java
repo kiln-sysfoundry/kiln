@@ -20,10 +20,16 @@ package org.sysfoundry.kiln.base.ss.evt;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
+
 @Data
 public class EventbusConfig {
 
     @JsonProperty("async-executor-threads")
+    @Min(value=1,message="asynchExecutorThreads minimum value is 1")
+    @Max(value=10,message="asynchExecutorThreads max value is 10")
     private int asyncExecutorThreads = 1;
 
 }

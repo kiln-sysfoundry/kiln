@@ -38,6 +38,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static org.sysfoundry.kiln.base.Constants.VALIDATE_CONFIG;
 import static org.sysfoundry.kiln.base.util.CollectionUtils.KV;
 import static org.sysfoundry.kiln.base.util.CollectionUtils.MAP;
 
@@ -92,6 +93,10 @@ public abstract class Subsys extends AbstractModule {
                     log.trace("About to register config provider for {} with prefix {}", configClass,configPrefix);
                     ConfigurationProviderFactory configurationProviderFactory = new ConfigurationProviderFactory();
                     requestInjection(configurationProviderFactory);
+                    if(subsysAttributes.containsKey(VALIDATE_CONFIG)){
+                        Boolean validationReqState = (Boolean)subsysAttributes.get(VALIDATE_CONFIG);
+                        configurationProviderFactory.setValidationEnabled(validationReqState);
+                    }
                     Provider configurationProvider = configurationProviderFactory.getConfigurationProvider(configPrefix, configClass);
                     bind(configClass).toProvider(configurationProvider).in(Singleton.class);
                     log.trace("Registered provider {} for class {}",configurationProvider,configClass);
@@ -148,6 +153,7 @@ public abstract class Subsys extends AbstractModule {
         String provider = aboutSubsysAnnotation.provider();
         String[] emitsEvents = aboutSubsysAnnotation.emits();
         String[] reactsToEvents = aboutSubsysAnnotation.reactsTo();
+        boolean validateConfig = aboutSubsysAnnotation.validateConfig();
 
         if(providedSubsysInfo!=null){
             id = providedSubsysInfo.getID();
@@ -164,7 +170,8 @@ public abstract class Subsys extends AbstractModule {
                 KV(Constants.AUTHORS, Arrays.asList(authors)),
                 KV(Constants.PROVIDER, provider),
                 KV(Constants.EMITS_EVENTS, Arrays.asList(emitsEvents)),
-                KV(Constants.REACTS_TO_EVENTS, Arrays.asList(reactsToEvents)));
+                KV(Constants.REACTS_TO_EVENTS, Arrays.asList(reactsToEvents)),
+                KV(VALIDATE_CONFIG,validateConfig));
 
         if(providedSubsysInfo != null){
             Map<String, Object> providedSubsysInfoAttributes = providedSubsysInfo.getAttributes();

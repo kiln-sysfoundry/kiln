@@ -37,6 +37,7 @@ import static org.sysfoundry.kiln.base.sys.Sys.STOPPED_EVENT;
         doc="The Event bus subsystem provides the Eventing capability to Kiln",
         configPrefix = CONFIG_PREFIX,
         configType = EventbusConfig.class,
+        validateConfig = true,
         provider = KILN_PROVIDER_URL,
         authors = KILN_TEAM,
         provisions = {

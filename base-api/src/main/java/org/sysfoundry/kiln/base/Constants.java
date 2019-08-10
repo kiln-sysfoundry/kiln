@@ -34,6 +34,7 @@ public final class Constants {
     public static final String EMITS_EVENTS = "__EMITS_EVENTS__";
     public static final String REACTS_TO_EVENTS = "__REACTS_TO_EVENTS__";
     public static final String EMPTY = "__EMPTY__";
+    public static final String VALIDATE_CONFIG = "__VALIDATE_CONFIG__";
 
 
     public static final String KILN_PROVIDER_URL = "url://www.sysfoundry.org";
