@@ -23,6 +23,7 @@ import com.google.inject.multibindings.Multibinder;
 import com.google.inject.spi.Message;
 import lombok.extern.slf4j.Slf4j;
 import org.sysfoundry.kiln.base.Constants;
+import org.sysfoundry.kiln.base.cfg.ConfigurationProviderFactory;
 import org.sysfoundry.kiln.base.cfg.ConfigurationSource;
 import org.sysfoundry.kiln.base.cfg.InputStreamConfigurationSource;
 import org.sysfoundry.kiln.base.srv.Server;

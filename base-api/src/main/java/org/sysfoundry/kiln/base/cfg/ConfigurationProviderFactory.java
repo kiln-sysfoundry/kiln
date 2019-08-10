@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package org.sysfoundry.kiln.base.sys;
+package org.sysfoundry.kiln.base.cfg;
 
 import lombok.extern.slf4j.Slf4j;
-import org.sysfoundry.kiln.base.cfg.ConfigurationSource;
+import org.sysfoundry.kiln.base.sys.SysConfigSource;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
