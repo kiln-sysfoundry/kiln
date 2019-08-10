@@ -19,9 +19,11 @@ package org.sysfoundry.kiln.base.cfg;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsFactory;
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper;
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsParser;
+import lombok.NonNull;
 
 import java.io.IOException;
 import java.util.*;
@@ -123,5 +125,21 @@ public class PropertiesConfigurationSource implements ConfigurationSource{
     public boolean isValid(String path) {
         JsonNode jsonNode = rootNode.at(path);
         return !jsonNode.isMissingNode();
+    }
+
+    @Override
+    public <T> T update(@NonNull String path, @NonNull T objTobeUpdated) throws ConfigurationException {
+        if(!isValid(path)){
+            throw new ConfigurationNotFoundException(String.format("No valid configuration value found for Path %s",path));
+        }
+
+        ObjectReader readerForUpdating = mapper.readerForUpdating(objTobeUpdated);
+        JsonNode jsonNodeAtPath = rootNode.at(path);
+        try {
+            Object updatedValue = readerForUpdating.readValue(jsonNodeAtPath);
+            return (T)updatedValue;
+        } catch (IOException e) {
+            throw new ConfigurationTypeException(String.format("Error occurred during type mapping of config path %s to object %s",path,objTobeUpdated),e);
+        }
     }
 }

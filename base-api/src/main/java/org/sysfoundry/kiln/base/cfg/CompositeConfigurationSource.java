@@ -16,6 +16,8 @@
 
 package org.sysfoundry.kiln.base.cfg;
 
+import lombok.NonNull;
+
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -122,5 +124,17 @@ public class CompositeConfigurationSource implements ConfigurationSource{
         }
 
         return retVal;
+    }
+
+    @Override
+    public <T> T update(@NonNull String path,@NonNull T objTobeUpdated) throws ConfigurationException {
+        for (ConfigurationSource configurationSource : configurationSources) {
+            if(configurationSource.isValid(path)){
+                return configurationSource.update(path,objTobeUpdated);
+            }
+        }
+
+        throw new ConfigurationNotFoundException(
+                String.format("Could not find the configuration for path %s in any of the configured configuration sources %s",path,configurationSources));
     }
 }

@@ -14,16 +14,25 @@
  * limitations under the License.
  */
 
-package org.sysfoundry.kiln.base.ss.evt;
+package org.sysfoundry.kiln.base.sys;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import java.lang.annotation.*;
 
-@Data
-public class EventbusConfig {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface Key {
 
-    @JsonProperty("async-executor-threads")
-    private int asyncExecutorThreads = 1;
+    Class type();
+
+    Class keyType() default None.class;
+
+    Class valueType() default None.class;
+
+    Class<? extends Annotation> annotation() default None.class;
+
+    String name() default "__NONE__";
+
+    Class<? extends Annotation> scope() default ScopeNotApplicable.class;
 
 }

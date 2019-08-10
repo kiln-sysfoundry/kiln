@@ -16,31 +16,45 @@
 
 package org.sysfoundry.kiln.base.ss.srv;
 
-import com.google.inject.Provides;
 import com.google.inject.matcher.Matchers;
 import com.google.inject.multibindings.Multibinder;
-import org.sysfoundry.kiln.base.cfg.ConfigurationSource;
-import org.sysfoundry.kiln.base.srv.ServerSet;
-import org.sysfoundry.kiln.base.sys.SubsysInfo;
-import org.sysfoundry.kiln.base.sys.Subsys;
+import org.sysfoundry.kiln.base.Constants;
+import org.sysfoundry.kiln.base.evt.EventBus;
 import org.sysfoundry.kiln.base.srv.Server;
-import org.sysfoundry.kiln.base.sys.SysConfigSource;
+import org.sysfoundry.kiln.base.srv.ServerSet;
+import org.sysfoundry.kiln.base.sys.About;
+import org.sysfoundry.kiln.base.sys.Args;
+import org.sysfoundry.kiln.base.sys.Key;
+import org.sysfoundry.kiln.base.sys.Subsys;
 import org.sysfoundry.kiln.base.util.MethodCalledMatcher;
 
 import javax.inject.Singleton;
 
-import static org.sysfoundry.kiln.base.util.CollectionUtils.KV;
-import static org.sysfoundry.kiln.base.util.CollectionUtils.MAP;
+import java.util.Set;
 
+import static org.sysfoundry.kiln.base.Constants.KILN_PROVIDER_URL;
+import static org.sysfoundry.kiln.base.Constants.SERVER_LIFECYCLE_EVENTS;
+import static org.sysfoundry.kiln.base.sys.Sys.*;
+
+@About(
+        doc = "The Server subsystem provides the capabilities to support the concept of Servers in Kiln",
+        configType = ServerSubsysConfig.class,
+        configPrefix = ServerSubsys.CONFIG_PREFIX,
+        provider = KILN_PROVIDER_URL,
+        authors = Constants.Authors.KILN_TEAM,
+        provisions = {
+                @Key(type= Set.class,valueType=Server.class,annotation=ServerSet.class,scope= Singleton.class)
+        },
+        requirements = {
+                @Key(type=String[].class,annotation= Args.class),
+                @Key(type= EventBus.class)
+        },
+        emits = {SERVER_LIFECYCLE_EVENTS},
+        reactsTo = {INITIALIZING_EVENT,STARTING_EVENT,STOPPING_EVENT}
+)
 public class ServerSubsys extends Subsys {
 
-    public static final String NAME = ServerSubsys.class.getName();
-
-    private ServerSubsysConfig defaultConfig = new ServerSubsysConfig();
-
-    public ServerSubsys(){
-        super(new SubsysInfo(NAME,MAP(KV("name",NAME))));
-    }
+    public static final String CONFIG_PREFIX = "/server-subsys-config";
 
     @Override
     protected void configure() {
@@ -74,13 +88,6 @@ public class ServerSubsys extends Subsys {
 
     private void registerServerSetMultibinder() {
         Multibinder.newSetBinder(binder(),Server.class, ServerSet.class);
-    }
-
-    @Provides
-    @Singleton
-    public ServerSubsysConfig provideSubsysConfig(@SysConfigSource ConfigurationSource configurationSource){
-        ServerSubsysConfig serverSubsysConfig = configurationSource.get("/server-subsys-config", ServerSubsysConfig.class, defaultConfig);
-        return serverSubsysConfig;
     }
 
 }

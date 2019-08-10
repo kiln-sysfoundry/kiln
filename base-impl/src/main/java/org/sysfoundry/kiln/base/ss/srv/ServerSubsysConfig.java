@@ -19,7 +19,7 @@ package org.sysfoundry.kiln.base.ss.srv;
 import lombok.Data;
 
 @Data
-class ServerSubsysConfig {
+public class ServerSubsysConfig {
 
     private boolean deliverServerLifecycleEventsAsAsync = false;
 

@@ -1,0 +1,8 @@
+{
+  "name" : "john",
+  "age" : 90,
+  "email" : "john@gmail.com",
+  "country" : "India",
+  "city" : "Delhi",
+  "continent" : "Asia"
+}

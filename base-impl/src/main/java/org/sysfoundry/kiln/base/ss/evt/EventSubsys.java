@@ -22,31 +22,41 @@ import com.google.inject.matcher.Matchers;
 import com.google.inject.spi.TypeListener;
 import lombok.extern.slf4j.Slf4j;
 import org.sysfoundry.kiln.base.cfg.ConfigurationSource;
-import org.sysfoundry.kiln.base.sys.SubsysInfo;
-import org.sysfoundry.kiln.base.sys.Subsys;
+import org.sysfoundry.kiln.base.sys.*;
 import org.sysfoundry.kiln.base.evt.EventBus;
-import org.sysfoundry.kiln.base.sys.SysConfigSource;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static org.sysfoundry.kiln.base.Constants.Authors.KILN_TEAM;
+import static org.sysfoundry.kiln.base.Constants.KILN_PROVIDER_URL;
+import static org.sysfoundry.kiln.base.ss.evt.EventSubsys.ASYNCBUS_EXECUTOR;
+import static org.sysfoundry.kiln.base.ss.evt.EventSubsys.CONFIG_PREFIX;
+import static org.sysfoundry.kiln.base.sys.Sys.STOPPED_EVENT;
 import static org.sysfoundry.kiln.base.util.CollectionUtils.KV;
 import static org.sysfoundry.kiln.base.util.CollectionUtils.MAP;
 
 @Slf4j
+@About(
+        doc="The Event bus subsystem provides the Eventing capability to Kiln",
+        configPrefix = CONFIG_PREFIX,
+        configType = EventbusConfig.class,
+        provider = KILN_PROVIDER_URL,
+        authors = KILN_TEAM,
+        provisions = {
+                @Key(type=ExecutorService.class,name=ASYNCBUS_EXECUTOR,scope=Singleton.class),
+                @Key(type=EventBus.class,scope=Singleton.class)
+        },
+        reactsTo = STOPPED_EVENT
+)
 public class EventSubsys extends Subsys {
 
-    public static final String NAME = EventSubsys.class.getName();
-
-    private EventbusConfig defaultEventbusConfig = new EventbusConfig();
     private EventTargetListener eventTargetListener = new EventTargetListener();
 
-    public EventSubsys(){
-        super(new SubsysInfo(NAME,MAP(KV("name",NAME))));
-        defaultEventbusConfig.setAsyncExecutorThreads(1);
-    }
+    public static final String CONFIG_PREFIX = "/eventbus-config";
+    public static final String ASYNCBUS_EXECUTOR = "asyncbus-executor";
 
     @Override
     protected void configure() {
@@ -66,19 +76,12 @@ public class EventSubsys extends Subsys {
 
 
     @Provides
-    @Named("asyncbus-executor")
+    @Named(ASYNCBUS_EXECUTOR)
     @Singleton
     public ExecutorService provideExecutorService(EventbusConfig config){
         log.trace("Eventbus Config {} ",config);
         return Executors.newFixedThreadPool(config.getAsyncExecutorThreads()); //for now only one thread is assigned
     }
 
-    @Provides
-    @Singleton
-    public EventbusConfig provideEventbusConfig(@SysConfigSource ConfigurationSource configurationSource){
-        EventbusConfig eventbusConfig = configurationSource.get("/eventbus-config", EventbusConfig.class,
-                defaultEventbusConfig);
-        return eventbusConfig;
-    }
 
 }

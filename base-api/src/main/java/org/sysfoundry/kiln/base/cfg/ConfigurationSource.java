@@ -50,4 +50,15 @@ public interface ConfigurationSource {
      */
     public boolean isValid(String path);
 
+
+    /**
+     * Update the specified Object with the attribute values of the given path
+     * @param path A '/' separated path to the configuration
+     * @param objTobeUpdated The Object of specified type to be updated
+     * @param <T> The type of the object
+     * @return The updated object with the properties set
+     * @throws ConfigurationException If the path or type is invalid
+     */
+    public <T> T update(String path,T objTobeUpdated) throws ConfigurationException;
+
 }

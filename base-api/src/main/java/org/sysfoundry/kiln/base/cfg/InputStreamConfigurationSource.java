@@ -20,6 +20,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.sysfoundry.kiln.base.util.JSONUtils;
 
@@ -108,5 +110,21 @@ public class InputStreamConfigurationSource implements ConfigurationSource{
         JsonNode jsonNode = rootNode.at(path);
         return !jsonNode.isMissingNode();
 
+    }
+
+    @Override
+    public <T> T update(@NonNull String path, @NonNull T objTobeUpdated) throws ConfigurationException {
+        if(!isValid(path)){
+            throw new ConfigurationNotFoundException(String.format("No valid configuration value found for Path %s",path));
+        }
+
+        ObjectReader readerForUpdating = OBJECT_MAPPER.readerForUpdating(objTobeUpdated);
+        JsonNode jsonNodeAtPath = rootNode.at(path);
+        try {
+            Object updatedValue = readerForUpdating.readValue(jsonNodeAtPath);
+            return (T)updatedValue;
+        } catch (IOException e) {
+            throw new ConfigurationTypeException(String.format("Error occurred during type mapping of config path %s to object %s",path,objTobeUpdated),e);
+        }
     }
 }

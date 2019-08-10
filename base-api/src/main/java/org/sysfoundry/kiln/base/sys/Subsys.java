@@ -16,17 +16,29 @@
 
 package org.sysfoundry.kiln.base.sys;
 
+import com.google.common.base.Strings;
 import com.google.inject.AbstractModule;
+import com.google.inject.ConfigurationException;
 import com.google.inject.multibindings.Multibinder;
+import com.google.inject.spi.Message;
 import lombok.extern.slf4j.Slf4j;
+import org.sysfoundry.kiln.base.Constants;
 import org.sysfoundry.kiln.base.cfg.ConfigurationSource;
 import org.sysfoundry.kiln.base.cfg.InputStreamConfigurationSource;
 import org.sysfoundry.kiln.base.srv.Server;
 import org.sysfoundry.kiln.base.srv.ServerSet;
 
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import static org.sysfoundry.kiln.base.util.CollectionUtils.KV;
+import static org.sysfoundry.kiln.base.util.CollectionUtils.MAP;
 
 /**
  * The Subsys represents an Abstraction of the Subsys in Kiln.
@@ -43,6 +55,15 @@ public abstract class Subsys extends AbstractModule {
 
     private SubsysInfo subsysInfo;
 
+
+
+    /**
+     * Creates a Subsys instance.
+     */
+    public Subsys(){
+        subsysInfo = null; //will be populated later from annotation if available
+    }
+
     /**
      * Creates a Subsys instance using the {@link SubsysInfo}
      * @param subsysInfo The subsys info for the subsys
@@ -53,8 +74,100 @@ public abstract class Subsys extends AbstractModule {
 
     @Override
     protected void configure() {
+        init();
         registerSubsysInfo();
         registerSubsysConfigSource();
+        registerSubsysConfigProvider();
+    }
+
+    protected void registerSubsysConfigProvider() {
+        Map<String,Object> subsysAttributes = subsysInfo.getAttributes();
+        if(subsysAttributes.containsKey(Constants.CONFIG_CLASS)){
+            Class configClass = (Class)subsysAttributes.get(Constants.CONFIG_CLASS);
+            if(!Void.class.isAssignableFrom(configClass)){
+                String configPrefix = (String)subsysAttributes.get(Constants.CONFIG_PREFIX);
+                if(!Strings.isNullOrEmpty(configPrefix)) {
+                    log.trace("About to register config provider for {} with prefix {}", configClass,configPrefix);
+                    ConfigurationProviderFactory configurationProviderFactory = new ConfigurationProviderFactory();
+                    requestInjection(configurationProviderFactory);
+                    Provider configurationProvider = configurationProviderFactory.getConfigurationProvider(configPrefix, configClass);
+                    bind(configClass).toProvider(configurationProvider).in(Singleton.class);
+                    log.trace("Registered provider {} for class {}",configurationProvider,configClass);
+
+                }
+            }
+        }
+    }
+
+    protected void init() {
+        Class<? extends Subsys> subsysClass = this.getClass();
+
+        About aboutAnnotation = subsysClass.getAnnotation(About.class);
+
+        if(aboutAnnotation == null){
+            String message = String.format("Subsys %s has not been annotated with %s. " +
+                    "It is advised to annotate for self documentation of subsystems.",subsysClass,About.class);
+            Message msgObj = new Message(message);
+            List<Message> messages = new ArrayList<>();
+            messages.add(msgObj);
+            throw new ConfigurationException(messages);
+        }
+
+        SubsysInfo tempSubsysInfo = getSubsysInfo(subsysClass,aboutAnnotation,this.subsysInfo);
+        this.subsysInfo = tempSubsysInfo;
+    }
+
+    private SubsysInfo getSubsysInfo(Class<? extends Subsys> subsysClass,About aboutAnnotation,SubsysInfo providedSubsysInfo) {
+        String id = aboutAnnotation.id();
+        if(id.equalsIgnoreCase(Constants.TYPE_NAME)){
+            id = subsysClass.getName();
+        }
+        Class configClass = aboutAnnotation.configType();
+        String configPrefix = aboutAnnotation.configPrefix();
+        Class<? extends Server>[] serverClasses = aboutAnnotation.servers();
+        Key[] provisionKeys = aboutAnnotation.provisions();
+        Key[] requirementKeys = aboutAnnotation.requirements();
+        String documentation = aboutAnnotation.doc();
+        String[] authors = aboutAnnotation.authors();
+        String provider = aboutAnnotation.provider();
+        String[] emitsEvents = aboutAnnotation.emits();
+        String[] reactsToEvents = aboutAnnotation.reactsTo();
+
+        if(providedSubsysInfo!=null){
+            id = providedSubsysInfo.getID();
+        }
+
+
+        Map<String, Object> subsysAttributes = MAP(KV(Constants.ID, id),
+                KV(Constants.CONFIG_CLASS, configClass),
+                KV(Constants.CONFIG_PREFIX, configPrefix),
+                KV(Constants.SERVER_CLASSES, Arrays.asList(serverClasses)),
+                KV(Constants.PROVISIONS, Arrays.asList(provisionKeys)),
+                KV(Constants.REQUIREMENTS, Arrays.asList(requirementKeys)),
+                KV(Constants.DOCUMENTATION, documentation),
+                KV(Constants.AUTHORS, Arrays.asList(authors)),
+                KV(Constants.PROVIDER, provider),
+                KV(Constants.EMITS_EVENTS, Arrays.asList(emitsEvents)),
+                KV(Constants.REACTS_TO_EVENTS, Arrays.asList(reactsToEvents)));
+
+        if(providedSubsysInfo != null){
+            Map<String, Object> providedSubsysInfoAttributes = providedSubsysInfo.getAttributes();
+
+            if(!providedSubsysInfoAttributes.isEmpty()){
+                providedSubsysInfoAttributes.forEach((k,v)->{
+                    if(subsysAttributes.containsKey(k)){
+                        log.info("Overwriting Subsys Attribute {} with provided value {}",k,v);
+                    }
+                    subsysAttributes.put(k,v);
+                });
+            }
+        }
+
+        SubsysInfo subsysInfo = new SubsysInfo(id,subsysAttributes);
+
+
+
+        return subsysInfo;
     }
 
     /**
