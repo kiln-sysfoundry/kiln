@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-@About(
+@AboutSubsys(
         provisions = {
                 @Key(type=ConfigurationSource.class,annotation=RuntimeSysConfigSource.class,scope=Singleton.class),
                 @Key(type=ConfigurationSource.class,annotation=SysConfigSource.class,scope=Singleton.class),

@@ -25,6 +25,7 @@ import org.sysfoundry.kiln.base.LifecycleException;
 import org.sysfoundry.kiln.base.evt.Event;
 import org.sysfoundry.kiln.base.evt.EventBus;
 import org.sysfoundry.kiln.base.ss.evt.EventSubsys;
+import org.sysfoundry.kiln.base.ss.evt.EventbusConfig;
 
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class DefaultSysTests {
     @Test
     public void testDefaultSysStartupSequence() throws LifecycleException {
         EventSubsys subsys = new EventSubsys();
-        EventBus eventBus = subsys.provideEventBus(Executors.newSingleThreadExecutor());
+        EventBus eventBus = subsys.provideEventBus(new EventbusConfig());
 
         TestListener testListener = new TestListener();
 

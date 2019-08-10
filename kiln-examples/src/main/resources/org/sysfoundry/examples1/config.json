@@ -1,0 +1,7 @@
+{
+  "simple-subsys-config" : {
+    "timer_on" : true,
+    "scheduler_on" : true,
+    "wait_time_in_milliseconds" : 30000
+  }
+}

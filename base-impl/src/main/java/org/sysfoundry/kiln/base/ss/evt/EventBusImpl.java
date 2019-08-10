@@ -25,19 +25,23 @@ import java.util.concurrent.ThreadPoolExecutor;
 class EventBusImpl implements EventBus{
 
 
+    public static final String SYNC_EVENTBUS_NAME = "sync-eventbus";
+    public static final String ASYNC_EVENTBUS_NAME = "async-eventbus";
+
     private com.google.common.eventbus.AsyncEventBus asyncEventBus;
     private com.google.common.eventbus.EventBus eventBus;
+    private EventbusConfig eventBusConfig;
+    private ExecutorService asyncExecutorService;
 
-
-    EventBusImpl(ExecutorService executorService){
-        eventBus = new com.google.common.eventbus.EventBus("sync-eventbus");
-        asyncEventBus = new com.google.common.eventbus.AsyncEventBus("async-eventbus",executorService);
+    EventBusImpl(EventbusConfig eventBusConfig){
+        this.eventBusConfig = eventBusConfig;
+        this.asyncExecutorService = Executors.newFixedThreadPool(eventBusConfig.getAsyncExecutorThreads());
+        eventBus = new com.google.common.eventbus.EventBus(SYNC_EVENTBUS_NAME);
+        asyncEventBus = new com.google.common.eventbus.AsyncEventBus(ASYNC_EVENTBUS_NAME,this.asyncExecutorService);
     }
 
     EventBusImpl(){
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-        eventBus = new com.google.common.eventbus.EventBus("sync-eventbus");
-        asyncEventBus = new com.google.common.eventbus.AsyncEventBus("async-eventbus",executorService);
+        this(new EventbusConfig());
     }
 
     @Override

@@ -26,6 +26,7 @@ import org.sysfoundry.kiln.base.evt.EventBus;
 import org.sysfoundry.kiln.base.srv.AbstractServer;
 import org.sysfoundry.kiln.base.srv.Server;
 import org.sysfoundry.kiln.base.ss.evt.EventSubsys;
+import org.sysfoundry.kiln.base.ss.evt.EventbusConfig;
 import org.sysfoundry.kiln.base.sys.Sys;
 
 import java.util.*;
@@ -40,7 +41,7 @@ public class ServerLifecycleManagerTests {
         String[] args = new String[]{"arg1","arg2"};
         StartupInfoCollector collector = new StartupInfoCollector();
         Set<Server> servers = getTestServers(collector);
-        EventBus eventBus = new EventSubsys().provideEventBus(Executors.newSingleThreadExecutor());
+        EventBus eventBus = new EventSubsys().provideEventBus(new EventbusConfig());
         ServerLifecycleManager serverLifecycleManager = new ServerLifecycleManager(eventBus,servers,args);
 
         eventBus.publishSync(Event.create(Sys.INITIALIZING_EVENT));

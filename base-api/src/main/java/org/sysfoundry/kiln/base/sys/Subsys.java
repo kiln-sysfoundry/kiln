@@ -78,6 +78,7 @@ public abstract class Subsys extends AbstractModule {
         registerSubsysInfo();
         registerSubsysConfigSource();
         registerSubsysConfigProvider();
+        registerServers();
     }
 
     protected void registerSubsysConfigProvider() {
@@ -99,39 +100,53 @@ public abstract class Subsys extends AbstractModule {
         }
     }
 
+    protected void registerServers(){
+        Map<String,Object> subsysAttributes = subsysInfo.getAttributes();
+        if(subsysAttributes.containsKey(Constants.SERVER_CLASSES)){
+            List<Class<? extends Server>> serverClasses = (List<Class<? extends Server>>)subsysAttributes.get(Constants.SERVER_CLASSES);
+
+            if(serverClasses != null && serverClasses.size() > 0){
+                //automatically register these servers from the declaration
+                bindServers(serverClasses.toArray(new Class[0]));
+                log.trace("Successfully bound server classes {}",serverClasses);
+
+            }
+        }
+    }
+
     protected void init() {
         Class<? extends Subsys> subsysClass = this.getClass();
 
-        About aboutAnnotation = subsysClass.getAnnotation(About.class);
+        AboutSubsys aboutSubsysAnnotation = subsysClass.getAnnotation(AboutSubsys.class);
 
-        if(aboutAnnotation == null){
+        if(aboutSubsysAnnotation == null){
             String message = String.format("Subsys %s has not been annotated with %s. " +
-                    "It is advised to annotate for self documentation of subsystems.",subsysClass,About.class);
+                    "It is advised to annotate for self documentation of subsystems.",subsysClass, AboutSubsys.class);
             Message msgObj = new Message(message);
             List<Message> messages = new ArrayList<>();
             messages.add(msgObj);
             throw new ConfigurationException(messages);
         }
 
-        SubsysInfo tempSubsysInfo = getSubsysInfo(subsysClass,aboutAnnotation,this.subsysInfo);
+        SubsysInfo tempSubsysInfo = getSubsysInfo(subsysClass, aboutSubsysAnnotation,this.subsysInfo);
         this.subsysInfo = tempSubsysInfo;
     }
 
-    private SubsysInfo getSubsysInfo(Class<? extends Subsys> subsysClass,About aboutAnnotation,SubsysInfo providedSubsysInfo) {
-        String id = aboutAnnotation.id();
+    private SubsysInfo getSubsysInfo(Class<? extends Subsys> subsysClass, AboutSubsys aboutSubsysAnnotation, SubsysInfo providedSubsysInfo) {
+        String id = aboutSubsysAnnotation.id();
         if(id.equalsIgnoreCase(Constants.TYPE_NAME)){
             id = subsysClass.getName();
         }
-        Class configClass = aboutAnnotation.configType();
-        String configPrefix = aboutAnnotation.configPrefix();
-        Class<? extends Server>[] serverClasses = aboutAnnotation.servers();
-        Key[] provisionKeys = aboutAnnotation.provisions();
-        Key[] requirementKeys = aboutAnnotation.requirements();
-        String documentation = aboutAnnotation.doc();
-        String[] authors = aboutAnnotation.authors();
-        String provider = aboutAnnotation.provider();
-        String[] emitsEvents = aboutAnnotation.emits();
-        String[] reactsToEvents = aboutAnnotation.reactsTo();
+        Class configClass = aboutSubsysAnnotation.configType();
+        String configPrefix = aboutSubsysAnnotation.configPrefix();
+        Class<? extends Server>[] serverClasses = aboutSubsysAnnotation.servers();
+        Key[] provisionKeys = aboutSubsysAnnotation.provisions();
+        Key[] requirementKeys = aboutSubsysAnnotation.requirements();
+        String documentation = aboutSubsysAnnotation.doc();
+        String[] authors = aboutSubsysAnnotation.authors();
+        String provider = aboutSubsysAnnotation.provider();
+        String[] emitsEvents = aboutSubsysAnnotation.emits();
+        String[] reactsToEvents = aboutSubsysAnnotation.reactsTo();
 
         if(providedSubsysInfo!=null){
             id = providedSubsysInfo.getID();

@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-package org.sysfoundry.examples;
+package org.sysfoundry.examples1;
 
-import lombok.extern.slf4j.Slf4j;
 import org.sysfoundry.kiln.base.LifecycleException;
-import org.sysfoundry.kiln.base.srv.AboutServer;
-import org.sysfoundry.kiln.base.srv.AbstractServer;
-import org.sysfoundry.kiln.base.srv.Server;
 import org.sysfoundry.kiln.base.ss.sys.BaseSysBuilder;
 import org.sysfoundry.kiln.base.sys.Sys;
 
-public class SimpleServerExample {
+public class SimpleMain {
 
-    public static void main(String[] args) {
+    public static void main(String[] args){
         Sys sys = new BaseSysBuilder(args)
-                .withServers(SimpleServer.class)
+                .withSubsystems(new SimpleSubsys())
                 .build();
 
         try {
@@ -36,26 +32,5 @@ public class SimpleServerExample {
         } catch (LifecycleException e) {
             e.printStackTrace();
         }
-    }
-}
-
-@Slf4j
-@AboutServer(
-        doc="Simple Server For testing"
-)
-class SimpleServer extends AbstractServer {
-
-
-    @Override
-    public void start(String[] args) throws LifecycleException {
-        log.info("Starting with args {}",args.length);
-        if(args.length > 0){
-            log.info("First arg {}",args[0]);
-        }
-    }
-
-    @Override
-    public void stop() throws LifecycleException {
-
     }
 }

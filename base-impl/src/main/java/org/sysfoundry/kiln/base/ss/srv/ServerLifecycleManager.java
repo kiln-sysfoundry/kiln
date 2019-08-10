@@ -185,7 +185,8 @@ class ServerLifecycleManager {
         this.orphanLevelListOptional.ifPresent(serverList->{
             serverList.forEach(server -> {
                 log.warn("Server - {} is in an orphaned state and cannot be started. " +
-                        "Please verify the requirements of this server!",server.getName());
+                        "It requires capabilities : {}, but one or more of these capabilities are not available in the System. " +
+                        "Please verify the setup",server.getName(),server.getRequiredCapabilities().orElse(new String[]{}));
             });
         });
 

@@ -16,11 +16,13 @@
 
 package org.sysfoundry.kiln.base.sys;
 
+import lombok.extern.slf4j.Slf4j;
 import org.sysfoundry.kiln.base.cfg.ConfigurationSource;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+@Slf4j
 public class ConfigurationProviderFactory<T> {
 
     private ConfigurationSource configurationSource;
@@ -35,6 +37,7 @@ public class ConfigurationProviderFactory<T> {
             @Override
             public T get() {
                 try {
+                    log.trace("Getting configuration instance for path {} and class {}",path,clz);
                     Object defaultInstance = clz.newInstance();
                     T configValue = (T)configurationSource.get(path, clz, defaultInstance);
                     return configValue;
@@ -54,6 +57,7 @@ public class ConfigurationProviderFactory<T> {
         return new Provider<T>() {
             @Override
             public T get() {
+                log.trace("Getting configuration instance for path {}, with default value {}",path,defaultValue);
                 T configValue = configurationSource.get(path, (Class<T>) defaultValue.getClass(), defaultValue);
                 return configValue;
             }

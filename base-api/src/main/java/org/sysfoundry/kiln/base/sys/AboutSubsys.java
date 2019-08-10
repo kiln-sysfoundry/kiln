@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface About {
+public @interface AboutSubsys {
 
 
     /**

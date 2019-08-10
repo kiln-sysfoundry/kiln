@@ -14,44 +14,36 @@
  * limitations under the License.
  */
 
-package org.sysfoundry.examples;
+package org.sysfoundry.examples1;
 
 import lombok.extern.slf4j.Slf4j;
-import org.sysfoundry.kiln.base.evt.Event;
-import org.sysfoundry.kiln.base.evt.OnEvent;
+import org.sysfoundry.kiln.base.LifecycleException;
 import org.sysfoundry.kiln.base.srv.AboutServer;
 import org.sysfoundry.kiln.base.srv.AbstractServer;
-import org.sysfoundry.kiln.base.sys.Sys;
 
 import javax.inject.Inject;
 
-
 @Slf4j
 @AboutServer(
-        doc="Simple POJO Server for testing purposes"
+        doc="Init Server for doing the initialization services",
+        provides="init-service"
 )
-public class SimplePOJOServer extends AbstractServer {
+public class InitServer extends AbstractServer {
 
-    private ServerConfig config;
+    private SimpleSubsysConfig cfg;
 
     @Inject
-    public SimplePOJOServer(ServerConfig config){
-        super("simple-server","simple","");
-        this.config = config;
+    public InitServer(SimpleSubsysConfig config){
+        this.cfg = config;
     }
 
-    public void start(String[] args){
-        log.info("Starting..."+args.length);
+    @Override
+    public void start(String[] args) throws LifecycleException {
+        log.info("Started with config {} ...",cfg);
     }
 
-
-    public void stop(){
-        log.info("Stopping...");
-    }
-
-    @OnEvent({Sys.INITIALIZING_EVENT,Sys.STARTED_EVENT})
-    public void onNewEvent(Event event){
-        log.info("Received Event {}",event.getName());
-
+    @Override
+    public void stop() throws LifecycleException {
+        log.info("Stopped...");
     }
 }

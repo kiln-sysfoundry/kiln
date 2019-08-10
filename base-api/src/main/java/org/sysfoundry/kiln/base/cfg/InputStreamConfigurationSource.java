@@ -100,6 +100,8 @@ public class InputStreamConfigurationSource implements ConfigurationSource{
             T val = get(path, clz);
             return val;
         } catch (ConfigurationException e) {
+            log.trace("Unable to load configuration for path {}, due to exception {} so returning the default value {}",
+                    path,e.getMessage(),defaultVal);
             return defaultVal;
         }
     }

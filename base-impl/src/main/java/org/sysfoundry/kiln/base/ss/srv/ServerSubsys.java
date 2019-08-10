@@ -22,7 +22,7 @@ import org.sysfoundry.kiln.base.Constants;
 import org.sysfoundry.kiln.base.evt.EventBus;
 import org.sysfoundry.kiln.base.srv.Server;
 import org.sysfoundry.kiln.base.srv.ServerSet;
-import org.sysfoundry.kiln.base.sys.About;
+import org.sysfoundry.kiln.base.sys.AboutSubsys;
 import org.sysfoundry.kiln.base.sys.Args;
 import org.sysfoundry.kiln.base.sys.Key;
 import org.sysfoundry.kiln.base.sys.Subsys;
@@ -36,7 +36,7 @@ import static org.sysfoundry.kiln.base.Constants.KILN_PROVIDER_URL;
 import static org.sysfoundry.kiln.base.Constants.SERVER_LIFECYCLE_EVENTS;
 import static org.sysfoundry.kiln.base.sys.Sys.*;
 
-@About(
+@AboutSubsys(
         doc = "The Server subsystem provides the capabilities to support the concept of Servers in Kiln",
         configType = ServerSubsysConfig.class,
         configPrefix = ServerSubsys.CONFIG_PREFIX,
@@ -46,8 +46,8 @@ import static org.sysfoundry.kiln.base.sys.Sys.*;
                 @Key(type= Set.class,valueType=Server.class,annotation=ServerSet.class,scope= Singleton.class)
         },
         requirements = {
-                @Key(type=String[].class,annotation= Args.class),
-                @Key(type= EventBus.class)
+                @Key(type = String[].class,annotation = Args.class),
+                @Key(type = EventBus.class)
         },
         emits = {SERVER_LIFECYCLE_EVENTS},
         reactsTo = {INITIALIZING_EVENT,STARTING_EVENT,STOPPING_EVENT}

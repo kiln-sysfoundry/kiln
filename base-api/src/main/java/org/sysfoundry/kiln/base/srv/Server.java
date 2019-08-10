@@ -74,6 +74,12 @@ public interface Server {
     }
 
     /**
+     * Retrieves the documentation of the server
+     * @return - The documentation provided by the author of the server
+     */
+    public String getDocumentation();
+
+    /**
      * The callback invoked by Kiln when it is appropriate for this server to start.
      * @param args The arguments passed to the system on startup
      * @throws LifecycleException - This exception can be thrown by the server implementation on startup to indicate the reason for failure
