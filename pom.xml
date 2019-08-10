@@ -21,7 +21,7 @@
     <groupId>org.sysfoundry.kiln</groupId>
     <artifactId>kiln</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.2</version>
+    <version>0.1.3-SNAPSHOT</version>
     <modules>
         <module>kiln-examples</module>
         <module>base-api</module>
@@ -71,7 +71,7 @@
         <connection>scm:git:git://github.com/kiln-sysfoundry/kiln.git</connection>
         <developerConnection>scm:git:git@github.com:kiln-sysfoundry/kiln.git</developerConnection>
         <url>https://github.com/kiln-sysfoundry/kiln</url>
-      <tag>kiln-0.1.2</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <distributionManagement>
