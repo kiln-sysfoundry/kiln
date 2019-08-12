@@ -45,16 +45,16 @@ public class CompositeConfigurationSource implements ConfigurationSource{
 
     /**
      * Constructs a CompositeConfigurationSource from 3 sets of configuration sources
-     * @param overridingConfigurationSource - The overrdingConfigurationSource which overrides over the primary and the secondary
+     * @param overlayingConfigurationSource - The overlayingConfigurationSource which overrides over the primary and the secondary
      * @param secondaryConfigurationSources - The Secondary configuration source
      * @param primaryConfigurationSources - The primary configuration source
      */
-    public CompositeConfigurationSource(ConfigurationSource overridingConfigurationSource,
+    public CompositeConfigurationSource(ConfigurationSource overlayingConfigurationSource,
                                         Set<ConfigurationSource> secondaryConfigurationSources,
                                         Set<ConfigurationSource> primaryConfigurationSources){
         Set<ConfigurationSource> mergedSources = new LinkedHashSet<>();
-        //add the overridingConfigurationSource as the first in the list so it is given priority over the rest
-        mergedSources.add(overridingConfigurationSource);
+        //add the overlayingConfigurationSource as the first in the list so it is given priority over the rest
+        mergedSources.add(overlayingConfigurationSource);
         mergedSources.addAll(primaryConfigurationSources);
         mergedSources.addAll(secondaryConfigurationSources);
         this.configurationSources = mergedSources;

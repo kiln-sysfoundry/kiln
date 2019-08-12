@@ -142,4 +142,15 @@ public class PropertiesConfigurationSource implements ConfigurationSource{
             throw new ConfigurationTypeException(String.format("Error occurred during type mapping of config path %s to object %s",path,objTobeUpdated),e);
         }
     }
+
+    @Override
+    public <T> T getView(@NonNull Class<T> viewType) throws ConfigurationException {
+        if(viewType.isAssignableFrom(JsonNode.class)){
+            //just return the internal JsonNode object
+            return (T)this.rootNode;
+        }
+        throw new ConfigurationException(String.format(unSupportedViewTypeMessageFormat,viewType));
+
+    }
+
 }

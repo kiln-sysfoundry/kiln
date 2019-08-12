@@ -21,6 +21,7 @@ package org.sysfoundry.kiln.base.cfg;
  */
 public interface ConfigurationSource {
 
+    String unSupportedViewTypeMessageFormat = "View type %s is not supported by this configuration source";
     /**
      * Retrieve the configuration given a path '/' separated and the data type (class) expected of the
      * configuration type
@@ -60,5 +61,19 @@ public interface ConfigurationSource {
      * @throws ConfigurationException If the path or type is invalid
      */
     public <T> T update(String path,T objTobeUpdated) throws ConfigurationException;
+
+
+    /**
+     * Retrieves a specific view of the Configuration Source.
+     * Views are useful form of abstraction which provides the ability to look at configuration sources
+     * in different perspectives. For example as a path view, tree view etc.
+     * @param viewType The type of view of the Configuration Source
+     * @param <T> The type of view of the configuration source
+     * @return The view if the view is supported
+     * @throws ConfigurationException If the view is not supported by the implementation
+     */
+    public default <T> T getView(Class<T> viewType) throws ConfigurationException{
+        throw new ConfigurationException(String.format(unSupportedViewTypeMessageFormat,viewType));
+    }
 
 }

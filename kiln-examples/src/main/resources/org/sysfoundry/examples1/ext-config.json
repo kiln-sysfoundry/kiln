@@ -1,0 +1,6 @@
+{
+  "simple-subsys-config" : {
+    "wait_time_in_milliseconds" : 90,
+    "scheduler_on" : false
+  }
+}

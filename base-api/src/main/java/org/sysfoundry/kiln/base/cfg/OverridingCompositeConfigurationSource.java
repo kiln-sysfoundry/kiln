@@ -26,56 +26,72 @@ import lombok.extern.slf4j.Slf4j;
 import org.sysfoundry.kiln.base.util.JSONUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-/**
- * A simple InputStream based ConfigurationSource Implementation.
- * This implementation allows multiple input streams to be composed as a singe configuration source instance.
- *
- * The current implementation only supports 'JSON' streams.
- * Internally the inputstreams are loaded as JSON nodes and they are logically merged in to a singe JSON node tree.
- * The order of merge is as per the order of the input streams.
- */
 @Slf4j
-public class InputStreamConfigurationSource implements ConfigurationSource{
+public class OverridingCompositeConfigurationSource implements ConfigurationSource{
 
-    protected JsonNode rootNode;
+    private Set<ConfigurationSource> configurationSources;
+    private JsonNode rootNode;
     protected ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    /**
-     * Constructor for InputStreamConfigurationSource
-     * @param allowNullStreams Configuration to specify whether the implementation will allow the passing of null inputstreams
-     * @param throwErrorOnMismatchedTypes Configuration to specify whether the error should be thrown on mismatch of data types during merge of input stream content
-     * @param inputStreams The array of input streams to be merged
-     */
-    public InputStreamConfigurationSource(boolean allowNullStreams, boolean throwErrorOnMismatchedTypes, InputStream... inputStreams){
 
+    public OverridingCompositeConfigurationSource(Set<ConfigurationSource> secondaryConfigurationSources,
+                                                  Set<ConfigurationSource> primaryConfigurationSources){
+        this(null,secondaryConfigurationSources,primaryConfigurationSources);
+    }
+
+    public OverridingCompositeConfigurationSource(ConfigurationSource overridingConfigurationSource,
+                                                  Set<ConfigurationSource> secondaryConfigurationSources,
+                                                  Set<ConfigurationSource> primaryConfigurationSources){
+        this(overridingConfigurationSource,secondaryConfigurationSources,primaryConfigurationSources,false);
+    }
+
+    public OverridingCompositeConfigurationSource(ConfigurationSource overridingConfigurationSource,
+                                                  Set<ConfigurationSource> secondaryConfigurationSources,
+                                                  Set<ConfigurationSource> primaryConfigurationSources,boolean throwErrorOnMismatchedTypes){
+        Set<ConfigurationSource> mergedSources = new LinkedHashSet<>();
+        mergedSources.addAll(secondaryConfigurationSources);
+        mergedSources.addAll(primaryConfigurationSources);
+        if(overridingConfigurationSource != null) {
+            //add the overridingConfigurationSource as the first in the list so it is given priority over the rest
+            mergedSources.add(overridingConfigurationSource);
+        }
+        this.configurationSources = mergedSources;
+
+        rootNode = constructMergedRootNode(throwErrorOnMismatchedTypes);
+
+    }
+
+    private JsonNode constructMergedRootNode(boolean throwErrorOnMismatchedTypes) {
         JsonNode configRootNode = null;
 
-        for (InputStream inputStream : inputStreams) {
-            if(!allowNullStreams) {
-                checkArgument(inputStream != null, "Configuration Inputstream cannot be null!");
-            }
+        for (ConfigurationSource configurationSource : this.configurationSources) {
             try {
-                JsonNode newNode = OBJECT_MAPPER.readTree(inputStream);
+                JsonNode newNode = configurationSource.getView(JsonNode.class);
                 if(configRootNode == null){
                     configRootNode = newNode;
                 }else{
                     JSONUtils.merge(newNode,configRootNode,throwErrorOnMismatchedTypes);
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+
+            } catch (ConfigurationException e) {
+                String message = String.format("Failed to get Json view of configuration source %s. So this source will be ignored from the merged final configuration",
+                        configurationSource);
+                log.warn(message);
             }
         }
 
+
         checkArgument(configRootNode != null,"Configuration Source is in an invalid state. No Valid configuration root node found!");
 
-        rootNode = configRootNode;
 
         OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
 
+        return configRootNode;
     }
 
     @Override
@@ -85,7 +101,7 @@ public class InputStreamConfigurationSource implements ConfigurationSource{
         }
 
         try {
-             T value = OBJECT_MAPPER.treeToValue(rootNode.at(path), clz);
+            T value = OBJECT_MAPPER.treeToValue(rootNode.at(path), clz);
             return value;
         } catch (JsonProcessingException e) {
 

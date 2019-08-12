@@ -20,8 +20,8 @@ import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
 import org.sysfoundry.kiln.base.Constants;
-import org.sysfoundry.kiln.base.cfg.CompositeConfigurationSource;
 import org.sysfoundry.kiln.base.cfg.ConfigurationSource;
+import org.sysfoundry.kiln.base.cfg.OverridingCompositeConfigurationSource;
 import org.sysfoundry.kiln.base.cfg.PropertiesConfigurationSource;
 import org.sysfoundry.kiln.base.evt.EventBus;
 import org.sysfoundry.kiln.base.srv.Server;
@@ -171,7 +171,7 @@ public class SysSubsys extends Subsys {
     public ConfigurationSource provideSysConfigurationSource(@RuntimeSysConfigSource ConfigurationSource runtimeSysConfigurationSource,
             @SubsysConfigSourceSet Set<ConfigurationSource> subsysConfigSourceSet,
             @SysConfigSourceSet Set<ConfigurationSource> sysConfigSourceSet){
-        return new CompositeConfigurationSource(runtimeSysConfigurationSource,
+        return new OverridingCompositeConfigurationSource(runtimeSysConfigurationSource,
                 subsysConfigSourceSet,sysConfigSourceSet);
     }
 

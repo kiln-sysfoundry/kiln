@@ -17,6 +17,7 @@
 package org.sysfoundry.examples1;
 
 import org.sysfoundry.kiln.base.LifecycleException;
+import org.sysfoundry.kiln.base.cfg.InputStreamConfigurationSource;
 import org.sysfoundry.kiln.base.ss.sys.BaseSysBuilder;
 import org.sysfoundry.kiln.base.sys.Sys;
 
@@ -24,6 +25,8 @@ public class SimpleMain {
 
     public static void main(String[] args){
         Sys sys = new BaseSysBuilder(args)
+                .withConfigurations(new InputStreamConfigurationSource(false,false,
+                        SimpleMain.class.getResourceAsStream("/org/sysfoundry/examples1/ext-config.json")))
                 .withSubsystems(new SimpleSubsys())
                 .build();
 
