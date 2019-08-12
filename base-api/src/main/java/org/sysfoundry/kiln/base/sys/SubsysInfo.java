@@ -69,9 +69,8 @@ public class SubsysInfo {
 
     @Override
     public String toString() {
-        return "ModuleInfo{" +
+        return "SubsysInfo{" +
                 "id='" + id + '\'' +
-                ", attributes=" + attributes +
                 '}';
     }
 }
