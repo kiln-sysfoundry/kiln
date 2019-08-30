@@ -30,9 +30,9 @@ import javax.inject.Singleton;
 import static org.sysfoundry.kiln.base.Constants.Authors.KILN_TEAM;
 import static org.sysfoundry.kiln.base.Constants.KILN_PROVIDER_URL;
 import static org.sysfoundry.kiln.base.ss.evt.EventSubsys.CONFIG_PREFIX;
+import static org.sysfoundry.kiln.base.ss.evt.EventSubsys.NAME;
 import static org.sysfoundry.kiln.base.sys.Sys.STOPPED_EVENT;
 
-@Slf4j
 @AboutSubsys(
         doc="The Event bus subsystem provides the Eventing capability to Kiln",
         configPrefix = CONFIG_PREFIX,
@@ -49,7 +49,9 @@ public class EventSubsys extends Subsys {
 
     private EventTargetListener eventTargetListener = new EventTargetListener();
 
-    public static final String CONFIG_PREFIX = "/eventbus-config";
+    public static final String CONFIG_PREFIX = "eventbus-config";
+    public static final String NAME = "event-bus";
+
 
     @Override
     protected void configure() {

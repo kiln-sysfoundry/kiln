@@ -1,5 +1,0 @@
-{
-  "eventbus-config" : {
-    "async-executor-threads" : 2
-  }
-}

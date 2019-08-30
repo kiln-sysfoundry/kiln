@@ -18,8 +18,10 @@ package org.sysfoundry.kiln.base.ss.evt;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.sysfoundry.kiln.base.evt.Event;
 import org.sysfoundry.kiln.base.evt.OnEvent;
+import org.sysfoundry.kiln.base.health.Log;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -28,7 +30,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Slf4j
+import static org.sysfoundry.kiln.base.ss.evt.EventSubsys.NAME;
+
+
 class SubscriberMeta {
 
     private Class subscriberType;
@@ -37,6 +41,8 @@ class SubscriberMeta {
     private Optional<Method> targetMethodOptional = Optional.empty();
     private Optional<List<Method>> targetMethodListOptional = Optional.empty();
     private boolean hasMultipleOnEventMethods = false;
+
+    private static final Logger log = Log.get(NAME);
 
     SubscriberMeta(@NonNull Class subscriberType){
         this.subscriberType = subscriberType;

@@ -16,8 +16,10 @@
 
 package org.sysfoundry.examples;
 
+import com.typesafe.config.ConfigFactory;
 import org.sysfoundry.kiln.base.LifecycleException;
 import org.sysfoundry.kiln.base.cfg.InputStreamConfigurationSource;
+import org.sysfoundry.kiln.base.cfg.TypesafeConfigurationSource;
 import org.sysfoundry.kiln.base.ss.sys.BaseSysBuilder;
 import org.sysfoundry.kiln.base.sys.SubsysInfo;
 import org.sysfoundry.kiln.base.sys.Sys;
@@ -31,8 +33,7 @@ public class MainWithSysBuilder {
         Sys sys = new BaseSysBuilder(args)
                 .withAttributes(new SubsysInfo("some-system",MAP(KV("name","some-system"))))
                 .withSubsystems(new ServerTestSubsys())
-                .withConfigurations(new InputStreamConfigurationSource(false,
-                        false,Main.class.getResourceAsStream("/TestConfig.json")))
+                .withConfigurations(new TypesafeConfigurationSource(ConfigFactory.defaultApplication()))
                 .build();
 
         try {

@@ -33,9 +33,9 @@ public class InputStreamConfigurationSourceTests {
 
         System.out.println("Before "+address);
 
-        Address updatedAddress = configurationSource.update("", address);
-        System.out.println("After "+updatedAddress);
-        System.out.println("After Original address "+address);
+        //Address updatedAddress = configurationSource.update("", address);
+        //System.out.println("After "+updatedAddress);
+        //System.out.println("After Original address "+address);
 
     }
 }

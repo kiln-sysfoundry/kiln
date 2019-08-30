@@ -41,6 +41,9 @@ public final class Constants {
 
 
     public static final String SERVER_LIFECYCLE_EVENTS = "events:<server>_<lifecycle-state>_events";
+    public static final String NONE = "__NONE__";
+
+    public static final String LOG_NAME_PATTERN = "[a-z0-9\\-]+";
 
     public static final class Authors{
         public static final String KILN_TEAM = "email:kiln.sysfoundry@gmail.com";

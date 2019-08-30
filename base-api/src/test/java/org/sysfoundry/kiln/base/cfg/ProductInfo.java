@@ -14,23 +14,15 @@
  * limitations under the License.
  */
 
-package org.sysfoundry.kiln.base.sys;
+package org.sysfoundry.kiln.base.cfg;
 
+import lombok.Data;
 
-import org.sysfoundry.kiln.base.Constants;
+import java.util.List;
 
-import java.lang.annotation.*;
-
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Key {
-
-    Class type();
-
-    Class<? extends Annotation> annotation() default None.class;
-
-    String name() default Constants.NONE;
-
-    Class<? extends Annotation> scope() default ScopeNotApplicable.class;
-
+@Data
+public class ProductInfo {
+    private String name;
+    private String version;
+    private List<String> capabilities;
 }

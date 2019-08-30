@@ -16,11 +16,18 @@
 
 package org.sysfoundry.kiln.base.ss.evt;
 
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.sysfoundry.kiln.base.evt.EventBus;
+import org.sysfoundry.kiln.base.health.Log;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
+
+import static org.sysfoundry.kiln.base.health.Log.get;
+import static org.sysfoundry.kiln.base.ss.evt.EventSubsys.NAME;
+
 
 class EventBusImpl implements EventBus{
 
@@ -33,7 +40,10 @@ class EventBusImpl implements EventBus{
     private EventbusConfig eventBusConfig;
     private ExecutorService asyncExecutorService;
 
+    private static final Logger log = get(NAME);
+
     EventBusImpl(EventbusConfig eventBusConfig){
+        log.trace("Eventbus Config {}",eventBusConfig);
         this.eventBusConfig = eventBusConfig;
         this.asyncExecutorService = Executors.newFixedThreadPool(eventBusConfig.getAsyncExecutorThreads());
         eventBus = new com.google.common.eventbus.EventBus(SYNC_EVENTBUS_NAME);

@@ -17,21 +17,23 @@
 package org.sysfoundry.kiln.base.ss.srv;
 
 import com.google.common.eventbus.Subscribe;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.sysfoundry.kiln.base.LifecycleException;
-import org.sysfoundry.kiln.base.srv.Server;
-import org.sysfoundry.kiln.base.srv.ServerSet;
 import org.sysfoundry.kiln.base.evt.Event;
 import org.sysfoundry.kiln.base.evt.EventBus;
+import org.sysfoundry.kiln.base.health.Log;
+import org.sysfoundry.kiln.base.srv.Server;
+import org.sysfoundry.kiln.base.srv.ServerSet;
 import org.sysfoundry.kiln.base.sys.Args;
 
 import javax.inject.Inject;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.sysfoundry.kiln.base.ss.srv.ServerSubsys.NAME;
 import static org.sysfoundry.kiln.base.sys.Sys.*;
 
-@Slf4j
+
 class ServerLifecycleManager {
 
     private EventBus eventBus;
@@ -42,6 +44,8 @@ class ServerLifecycleManager {
     private Optional<List<Server>> orphanLevelListOptional;
     private Optional<List<List<Server>>> orderedServersListOption;
     private String[] args;
+
+    private static final Logger log = Log.get(NAME);
 
     @Inject
     ServerLifecycleManager(EventBus eventBus, @ServerSet Set<Server> servers, @Args String[] args){

@@ -20,24 +20,24 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
 import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.sysfoundry.kiln.base.health.Log;
 import org.sysfoundry.kiln.base.util.JSONUtils;
 
-import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.sysfoundry.kiln.base.sys.Subsys.BASE_SUBSYS_NAME;
 
-@Slf4j
 public class OverridingCompositeConfigurationSource implements ConfigurationSource{
 
     private Set<ConfigurationSource> configurationSources;
     private JsonNode rootNode;
     protected ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
+    private static final Logger log = Log.get(BASE_SUBSYS_NAME);
 
     public OverridingCompositeConfigurationSource(Set<ConfigurationSource> secondaryConfigurationSources,
                                                   Set<ConfigurationSource> primaryConfigurationSources){
@@ -130,7 +130,7 @@ public class OverridingCompositeConfigurationSource implements ConfigurationSour
 
     }
 
-    @Override
+    /*@Override
     public <T> T update(@NonNull String path, @NonNull T objTobeUpdated) throws ConfigurationException {
         if(!isValid(path)){
             throw new ConfigurationNotFoundException(String.format("No valid configuration value found for Path %s",path));
@@ -144,7 +144,7 @@ public class OverridingCompositeConfigurationSource implements ConfigurationSour
         } catch (IOException e) {
             throw new ConfigurationTypeException(String.format("Error occurred during type mapping of config path %s to object %s",path,objTobeUpdated),e);
         }
-    }
+    }*/
 
     @Override
     public <T> T getView(@NonNull Class<T> viewType) throws ConfigurationException {

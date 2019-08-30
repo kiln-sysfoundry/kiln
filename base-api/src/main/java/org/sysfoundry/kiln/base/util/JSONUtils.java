@@ -20,15 +20,19 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.*;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.sysfoundry.kiln.base.health.Log;
 
 import java.util.Iterator;
 import java.util.Map;
 
-@Slf4j
+import static org.sysfoundry.kiln.base.sys.Subsys.BASE_SUBSYS_NAME;
+
 public class JSONUtils {
 
     public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
+    private static final Logger log = Log.get(BASE_SUBSYS_NAME);
 
     public static <T> T convertValue(Object value,Class<T> typ){
         T t = OBJECT_MAPPER.convertValue(value, typ);

@@ -25,9 +25,10 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.spi.ProvisionListener;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.sysfoundry.kiln.base.evt.Event;
 import org.sysfoundry.kiln.base.evt.EventBus;
+import org.sysfoundry.kiln.base.health.Log;
 import org.sysfoundry.kiln.base.sys.Sys;
 
 import javax.inject.Inject;
@@ -35,13 +36,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-@Slf4j
+import static org.sysfoundry.kiln.base.ss.evt.EventSubsys.NAME;
+
+
 class EventTargetListener{
 
     private EventTypeListener eventTypeListener = new EventTypeListener();
     private EventTypeProvisionListener eventTypeProvisionListener = new EventTypeProvisionListener();
     private PersistentList<Class> alreadyRegisteredTypes = com.github.krukow.clj_lang.PersistentList.emptyList();
 
+    private static final Logger log = Log.get(NAME);
 
     EventTypeProvisionListener getEventTypeProvisionListener(){
         return eventTypeProvisionListener;

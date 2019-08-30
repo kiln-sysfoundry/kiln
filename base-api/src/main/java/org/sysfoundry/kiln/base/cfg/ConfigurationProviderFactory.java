@@ -17,6 +17,8 @@
 package org.sysfoundry.kiln.base.cfg;
 
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.sysfoundry.kiln.base.health.Log;
 import org.sysfoundry.kiln.base.sys.SysConfigSource;
 
 import javax.inject.Inject;
@@ -25,13 +27,16 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.util.Set;
 
+import static org.sysfoundry.kiln.base.sys.Subsys.BASE_SUBSYS_NAME;
 
-@Slf4j
+
 public class ConfigurationProviderFactory<T> {
 
     private ConfigurationSource configurationSource;
     private Validator configValidator;
     private boolean validationEnabled;
+
+    private static final Logger log = Log.get(BASE_SUBSYS_NAME);
 
 
     @Inject

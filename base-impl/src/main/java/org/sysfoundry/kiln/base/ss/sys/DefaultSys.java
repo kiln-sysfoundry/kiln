@@ -19,17 +19,21 @@ package org.sysfoundry.kiln.base.ss.sys;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.sysfoundry.kiln.base.LifecycleException;
 import org.sysfoundry.kiln.base.evt.Event;
 import org.sysfoundry.kiln.base.evt.EventBus;
+import org.sysfoundry.kiln.base.health.Log;
 import org.sysfoundry.kiln.base.sys.Sys;
 
-@Slf4j
+import static org.sysfoundry.kiln.base.ss.sys.SysSubsys.NAME;
+
 class DefaultSys implements Sys{
 
     private EventBus eventBus;
     private boolean started;
     private boolean initialized;
+    private static final Logger log = Log.get(NAME);
 
     @Inject
     public DefaultSys(EventBus eventBus) {

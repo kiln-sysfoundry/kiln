@@ -19,18 +19,23 @@ package org.sysfoundry.kiln.base.ss.evt;
 import com.google.common.eventbus.Subscribe;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.sysfoundry.kiln.base.evt.Event;
+import org.sysfoundry.kiln.base.health.Log;
 
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
 
-@Slf4j
+import static org.sysfoundry.kiln.base.ss.evt.EventSubsys.NAME;
+
+
 class Subscriber {
 
     private Object target;
     private SubscriberMeta meta;
 
+    private static final Logger log = Log.get(NAME);
 
     Subscriber(@NonNull Object targetObject,@NonNull SubscriberMeta meta){
         this.target = targetObject;

@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-package org.sysfoundry.kiln.base.sys;
+package org.sysfoundry.kiln.base.health;
 
+import lombok.NonNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.sysfoundry.kiln.base.Constants;
+import static org.sysfoundry.kiln.base.Constants.LOG_NAME_PATTERN;
 
-import java.lang.annotation.*;
+public class Log {
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Key {
-
-    Class type();
-
-    Class<? extends Annotation> annotation() default None.class;
-
-    String name() default Constants.NONE;
-
-    Class<? extends Annotation> scope() default ScopeNotApplicable.class;
-
+    public static Logger get(@NonNull  String name){
+        Logger requestedLogger = LoggerFactory.getLogger(name);
+        if(!name.matches(LOG_NAME_PATTERN)){
+            requestedLogger.warn("Invalid logger name: {}. Only numbers, lowercase letters and - are allowed!",name);
+        }
+        return requestedLogger;
+    }
 }

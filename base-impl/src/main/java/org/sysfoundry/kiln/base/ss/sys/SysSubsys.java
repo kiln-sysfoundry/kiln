@@ -19,10 +19,9 @@ package org.sysfoundry.kiln.base.ss.sys;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
+import com.typesafe.config.ConfigFactory;
 import org.sysfoundry.kiln.base.Constants;
-import org.sysfoundry.kiln.base.cfg.ConfigurationSource;
-import org.sysfoundry.kiln.base.cfg.OverridingCompositeConfigurationSource;
-import org.sysfoundry.kiln.base.cfg.PropertiesConfigurationSource;
+import org.sysfoundry.kiln.base.cfg.*;
 import org.sysfoundry.kiln.base.evt.EventBus;
 import org.sysfoundry.kiln.base.srv.Server;
 import org.sysfoundry.kiln.base.ss.evt.EventSubsys;
@@ -42,8 +41,8 @@ import java.util.Set;
         provisions = {
                 @Key(type=ConfigurationSource.class,annotation=RuntimeSysConfigSource.class,scope=Singleton.class),
                 @Key(type=ConfigurationSource.class,annotation=SysConfigSource.class,scope=Singleton.class),
-                @Key(type=Set.class,valueType=ConfigurationSource.class,annotation=SysConfigSourceSet.class,scope=Singleton.class),
-                @Key(type=Set.class,valueType=ConfigurationSource.class,annotation=SubsysConfigSourceSet.class,scope=Singleton.class),
+                @Key(type=Set.class,annotation=SysConfigSourceSet.class,scope=Singleton.class),
+                @Key(type=Set.class,annotation=SubsysConfigSourceSet.class,scope=Singleton.class),
                 @Key(type=Sys.class,scope=Singleton.class),
                 @Key(type=String[].class,annotation=Args.class,scope=Singleton.class),
                 @Key(type= Validator.class,scope=Singleton.class),
@@ -66,7 +65,7 @@ import java.util.Set;
 )
 public class SysSubsys extends Subsys {
 
-    //public static final String NAME = SysSubsys.class.getName();
+    public static final String NAME = "sys-subsys";
 
     private Optional<List<ConfigurationSource>> externalConfigurationSourcesOptional = Optional.empty();
     private String[] args;
@@ -161,8 +160,9 @@ public class SysSubsys extends Subsys {
     @Singleton
     @RuntimeSysConfigSource
     public ConfigurationSource provideRuntimeSysConfigurationSource(){
-        PropertiesConfigurationSource systemPropertiesConfigSource = new PropertiesConfigurationSource(System.getProperties());
-        return systemPropertiesConfigSource;
+        //PropertiesConfigurationSource systemPropertiesConfigSource = new PropertiesConfigurationSource(System.getProperties());
+        //return systemPropertiesConfigSource;
+        return new TypesafeConfigurationSource(ConfigFactory.defaultOverrides());
     }
 
     @Provides
@@ -171,8 +171,9 @@ public class SysSubsys extends Subsys {
     public ConfigurationSource provideSysConfigurationSource(@RuntimeSysConfigSource ConfigurationSource runtimeSysConfigurationSource,
             @SubsysConfigSourceSet Set<ConfigurationSource> subsysConfigSourceSet,
             @SysConfigSourceSet Set<ConfigurationSource> sysConfigSourceSet){
-        return new OverridingCompositeConfigurationSource(runtimeSysConfigurationSource,
-                subsysConfigSourceSet,sysConfigSourceSet);
+        //return new OverridingCompositeConfigurationSource(runtimeSysConfigurationSource,
+        //        subsysConfigSourceSet,sysConfigSourceSet);
+        return new CompositeTypesafeConfigurationSource(runtimeSysConfigurationSource,subsysConfigSourceSet,sysConfigSourceSet);
     }
 
     @Provides

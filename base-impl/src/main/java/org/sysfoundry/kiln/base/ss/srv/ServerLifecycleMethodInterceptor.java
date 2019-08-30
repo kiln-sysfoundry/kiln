@@ -19,13 +19,17 @@ package org.sysfoundry.kiln.base.ss.srv;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.slf4j.Logger;
+import org.sysfoundry.kiln.base.health.Log;
 import org.sysfoundry.kiln.base.srv.Server;
 import org.sysfoundry.kiln.base.evt.Event;
 import org.sysfoundry.kiln.base.evt.EventBus;
 
 import javax.inject.Inject;
 
-@Slf4j
+import static org.sysfoundry.kiln.base.ss.srv.ServerSubsys.NAME;
+
+
 class ServerLifecycleMethodInterceptor implements MethodInterceptor {
 
     private EventBus eventBus;
@@ -34,6 +38,7 @@ class ServerLifecycleMethodInterceptor implements MethodInterceptor {
     private String endName;
     private String failName;
     private ServerSubsysConfig serverSubsysConfig;
+    private static final Logger log = Log.get(NAME);
 
     ServerLifecycleMethodInterceptor(String beginName,String endName,String failName){
         this.beginName = beginName;

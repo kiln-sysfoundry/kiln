@@ -126,8 +126,8 @@ public class CompositeConfigurationSource implements ConfigurationSource{
         return retVal;
     }
 
-    @Override
-    public <T> T update(@NonNull String path,@NonNull T objTobeUpdated) throws ConfigurationException {
+    //@Override
+    /*public <T> T update(@NonNull String path,@NonNull T objTobeUpdated) throws ConfigurationException {
         for (ConfigurationSource configurationSource : configurationSources) {
             if(configurationSource.isValid(path)){
                 return configurationSource.update(path,objTobeUpdated);
@@ -136,5 +136,5 @@ public class CompositeConfigurationSource implements ConfigurationSource{
 
         throw new ConfigurationNotFoundException(
                 String.format("Could not find the configuration for path %s in any of the configured configuration sources %s",path,configurationSources));
-    }
+    }*/
 }

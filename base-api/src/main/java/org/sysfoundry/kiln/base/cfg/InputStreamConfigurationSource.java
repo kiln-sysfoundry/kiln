@@ -23,12 +23,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.sysfoundry.kiln.base.health.Log;
 import org.sysfoundry.kiln.base.util.JSONUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.sysfoundry.kiln.base.sys.Subsys.BASE_SUBSYS_NAME;
 
 /**
  * A simple InputStream based ConfigurationSource Implementation.
@@ -38,11 +41,12 @@ import static com.google.common.base.Preconditions.checkArgument;
  * Internally the inputstreams are loaded as JSON nodes and they are logically merged in to a singe JSON node tree.
  * The order of merge is as per the order of the input streams.
  */
-@Slf4j
 public class InputStreamConfigurationSource implements ConfigurationSource{
 
     protected JsonNode rootNode;
     protected ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+    private static final Logger log = Log.get(BASE_SUBSYS_NAME);
 
     /**
      * Constructor for InputStreamConfigurationSource
@@ -114,7 +118,7 @@ public class InputStreamConfigurationSource implements ConfigurationSource{
 
     }
 
-    @Override
+    /*@Override
     public <T> T update(@NonNull String path, @NonNull T objTobeUpdated) throws ConfigurationException {
         if(!isValid(path)){
             throw new ConfigurationNotFoundException(String.format("No valid configuration value found for Path %s",path));
@@ -128,7 +132,7 @@ public class InputStreamConfigurationSource implements ConfigurationSource{
         } catch (IOException e) {
             throw new ConfigurationTypeException(String.format("Error occurred during type mapping of config path %s to object %s",path,objTobeUpdated),e);
         }
-    }
+    }*/
 
     @Override
     public <T> T getView(@NonNull Class<T> viewType) throws ConfigurationException {

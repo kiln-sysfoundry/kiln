@@ -21,11 +21,14 @@ import com.google.inject.AbstractModule;
 import com.google.inject.ConfigurationException;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.spi.Message;
-import lombok.extern.slf4j.Slf4j;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
+import org.slf4j.Logger;
 import org.sysfoundry.kiln.base.Constants;
 import org.sysfoundry.kiln.base.cfg.ConfigurationProviderFactory;
 import org.sysfoundry.kiln.base.cfg.ConfigurationSource;
-import org.sysfoundry.kiln.base.cfg.InputStreamConfigurationSource;
+import org.sysfoundry.kiln.base.cfg.TypesafeConfigurationSource;
+import org.sysfoundry.kiln.base.health.Log;
 import org.sysfoundry.kiln.base.srv.Server;
 import org.sysfoundry.kiln.base.srv.ServerSet;
 
@@ -33,6 +36,7 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,13 +54,15 @@ import static org.sysfoundry.kiln.base.util.CollectionUtils.MAP;
  *     <li>SubsysInfo support - Ability to register SubsysInfo provided by the concreted child subsystem</li>
  * </ul>
  */
-@Slf4j
 public abstract class Subsys extends AbstractModule {
 
-    public static final String DEFAULT_CONFIG_NAME = "config.json";
+    public static final String DEFAULT_CONFIG_NAME = "defaults.conf";
+
+    public static final String BASE_SUBSYS_NAME = "base";
 
     private SubsysInfo subsysInfo;
 
+    private static final Logger log = Log.get(BASE_SUBSYS_NAME);
 
 
     /**
@@ -81,7 +87,37 @@ public abstract class Subsys extends AbstractModule {
         registerSubsysConfigSource();
         registerSubsysConfigProvider();
         registerServers();
+        //registerProvisions();
     }
+
+    /*private void registerProvisions() {
+        Map<String,Object> subsysAttributes = subsysInfo.getAttributes();
+        if(subsysAttributes.containsKey(Constants.PROVISIONS)){
+            List<Key> keysList = (List<Key>)subsysAttributes.get(Constants.PROVISIONS);
+
+            for (Key key : keysList) {
+                Class keyType = key.type();
+                Class<? extends Annotation> scopeAnnotationClass = key.scope();
+                Class<? extends Annotation> annotationClass = key.annotation();
+                String name = key.name();
+
+                //if annotation is available it is given priority over name
+                if(annotationClass != null && !annotationClass.isAssignableFrom(None.class)){
+                    if(!(Strings.isNullOrEmpty(name) && name.equalsIgnoreCase(Constants.NONE))){
+                        log.info("Annotation {} binding is prioritized over name {} which has been ignored. " +
+                                "To avoid ambiguity in documentation it is advisable to use either one not both!",annotationClass,name);
+                    }
+                    registerClasswithAnnotation(keyType,annotationClass,scopeAnnotationClass);
+                }
+
+            }
+
+        }
+    }
+
+    private void registerClasswithAnnotation(Class keyType, Class<? extends Annotation> annotationClass, Class<? extends Annotation> scopeAnnotationClass) {
+        bind(keyType).annotatedWith(annotationClass).in(scopeAnnotationClass);
+    }*/
 
     protected void registerSubsysConfigProvider() {
         Map<String,Object> subsysAttributes = subsysInfo.getAttributes();
@@ -195,14 +231,17 @@ public abstract class Subsys extends AbstractModule {
 
     /**
      * Looks up and registers the configuration source from the default location.
-     * The default location is the package name of the subsystem instance appended with '/config.json'
+     * The default location is the package name of the subsystem instance appended with '/defaults.conf'
      */
     protected void registerSubsysConfigSource() {
         try(InputStream resourceAsStream = getClass().getResourceAsStream(DEFAULT_CONFIG_NAME)){
             if(resourceAsStream != null){
-                InputStreamConfigurationSource inputStreamConfigurationSource =
-                        new InputStreamConfigurationSource(false,true,resourceAsStream);
-                registerConfigSource(inputStreamConfigurationSource);
+                //InputStreamConfigurationSource inputStreamConfigurationSource =
+                //        new InputStreamConfigurationSource(false,true,resourceAsStream);
+                Config config = ConfigFactory.parseReader(new InputStreamReader(resourceAsStream));
+                TypesafeConfigurationSource typesafeConfigurationSource = new TypesafeConfigurationSource(config);
+                //registerConfigSource(inputStreamConfigurationSource);
+                registerConfigSource(typesafeConfigurationSource);
             }else{
                 log.trace("Unable to find Subsys config {} for {} in classpath!",DEFAULT_CONFIG_NAME,subsysInfo.getID());
             }

@@ -127,7 +127,7 @@ public class PropertiesConfigurationSource implements ConfigurationSource{
         return !jsonNode.isMissingNode();
     }
 
-    @Override
+    /*@Override
     public <T> T update(@NonNull String path, @NonNull T objTobeUpdated) throws ConfigurationException {
         if(!isValid(path)){
             throw new ConfigurationNotFoundException(String.format("No valid configuration value found for Path %s",path));
@@ -141,7 +141,7 @@ public class PropertiesConfigurationSource implements ConfigurationSource{
         } catch (IOException e) {
             throw new ConfigurationTypeException(String.format("Error occurred during type mapping of config path %s to object %s",path,objTobeUpdated),e);
         }
-    }
+    }*/
 
     @Override
     public <T> T getView(@NonNull Class<T> viewType) throws ConfigurationException {

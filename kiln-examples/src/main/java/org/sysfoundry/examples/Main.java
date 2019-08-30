@@ -18,11 +18,15 @@ package org.sysfoundry.examples;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.typesafe.config.ConfigFactory;
 import org.sysfoundry.kiln.base.LifecycleException;
 import org.sysfoundry.kiln.base.cfg.InputStreamConfigurationSource;
+import org.sysfoundry.kiln.base.cfg.TypesafeConfigurationSource;
 import org.sysfoundry.kiln.base.ss.sys.SysSubsys;
 import org.sysfoundry.kiln.base.sys.SubsysInfo;
 import org.sysfoundry.kiln.base.sys.Sys;
+
+import java.io.InputStreamReader;
 
 import static org.sysfoundry.kiln.base.util.CollectionUtils.KV;
 import static org.sysfoundry.kiln.base.util.CollectionUtils.MAP;
@@ -31,8 +35,11 @@ public class Main {
 
     public static void main(String[] args) {
 
-        InputStreamConfigurationSource configurationSource = new InputStreamConfigurationSource(false,
-                false,Main.class.getResourceAsStream("/TestConfig.json"));
+        //InputStreamConfigurationSource configurationSource = new InputStreamConfigurationSource(false,
+        //        false,Main.class.getResourceAsStream("/TestConfig_deprecated.json"));
+
+        TypesafeConfigurationSource configurationSource = new TypesafeConfigurationSource(ConfigFactory.defaultApplication());
+
 
         Injector injector = Guice.createInjector(
                 new ServerTestSubsys(),
