@@ -34,7 +34,7 @@
         <slf4j>1.7.26</slf4j>
         <javax.annotation>1.3.2</javax.annotation>
         <lombok>1.18.8</lombok>
-        <jackson.json>2.10.0.pr1</jackson.json>
+        <jackson.json>2.13.4.1</jackson.json>
         <rincl>0.8.0</rincl>
         <clj-ds>0.0.4</clj-ds>
         <javax.inject>1</javax.inject>
